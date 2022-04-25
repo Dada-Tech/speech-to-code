@@ -14,8 +14,8 @@ const recognitionConfig = {
 
 const predictWordStart = () => {
   // `listen()` takes two arguments:
-// 1. A callback function that is invoked anytime a word is recognized.
-// 2. A configuration object with adjustable fields
+  // 1. A callback function that is invoked anytime a word is recognized.
+  // 2. A configuration object with adjustable fields
   baseRecognizer.listen(onWordRecognize, recognitionConfig);
 }
 
@@ -35,6 +35,11 @@ const onWordRecognize = (result) => {
   // Find the most probable word.
   scores.sort((s1, s2) => s2.score - s1.score);
   document.querySelector('#output-tensor').textContent = scores[0].word;
+
+  // stop when keyword stop is heard
+  if(scores[0].word === 'stop') {
+    predictWordStop();
+  }
 }
 
 export async function app() {
@@ -53,5 +58,4 @@ export async function app() {
   words = baseRecognizer.wordLabels();
 
   predictWordStart();
-  predictWordStop(100);
 }
