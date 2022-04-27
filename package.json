@@ -1,10 +1,27 @@
 {
-  "name": "tfjs-models-speech-commands-demo",
-  "version": "0.0.1",
-  "description": "",
+  "name": "speech-to-code",
+  "version": "1.0.0",
+  "description": "Limited Keyword Speech Synthesis Leveraging Transfer Learning",
   "main": "index.js",
-  "license": "Apache-2.0",
+  "type": "module",
+  "author": "David Dada",
+  "license": "ISC",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dada-Tech/speech-to-code.git"
+  },
+  "keywords": [
+    "tensorflow",
+    "transfer",
+    "learning",
+    "transfer-learning",
+    "NLP"
+  ],
+  "bugs": {
+    "url": "https://github.com/Dada-Tech/speech-to-code/issues"
+  },
+  "homepage": "https://github.com/Dada-Tech/speech-to-code#readme",
   "engines": {
     "node": ">=8.9.0"
   },
