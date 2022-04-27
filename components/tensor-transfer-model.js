@@ -22,7 +22,7 @@ let transferWords = []; // Array of words that the recognizer is trained to reco
 let recognizer;
 let transferDurationMultiplier;
 const BACKGROUND_NOISE_TAG = '_background_noise_';
-const STOP_TAG = 'stop'
+const STOP_TAG = 'stop';
 
 
 // baseRecognizer.listen config can adjust fields such as
@@ -30,11 +30,11 @@ const STOP_TAG = 'stop'
 //    - probabilityThreshold
 //    - includeEmbedding
 const recognitionConfig = {
-  probabilityThreshold: 0.75
-}
+  probabilityThreshold: 0.75,
+};
 
 // INIT
-export async function app() {
+export async function initTensorNLP() {
   // When calling `create()`, you must provide the type of the audio input.
   // The two available options are `BROWSER_FFT` and `SOFT_FFT`.
   // - BROWSER_FFT uses the browser's native Fourier transform.
@@ -58,20 +58,20 @@ const predictWordStart = () => {
   console.log('listening for words');
   // array of words that the recognizer is trained to recognize.
   transferWords = transferRecognizer.wordLabels();
-  console.log(transferWords)
+  console.log(transferWords);
 
   // `listen()` takes two arguments:
   // 1. A callback function that is invoked anytime a word is recognized.
   // 2. A configuration object with adjustable fields
   transferRecognizer.listen(onWordRecognize, recognitionConfig);
-}
+};
 
 const predictWordStop = (seconds = 0) => {
   setTimeout(() => {
-    baseRecognizer.stopListening()
+    baseRecognizer.stopListening();
     console.log('listening ended');
   }, seconds * 1000);
-}
+};
 
 //  result.scores contains the probability scores that correspond to recognizer.wordLabels().
 //  result.spectrogram contains the spectrogram of the recognized word.
@@ -89,51 +89,14 @@ const onWordRecognize = (result) => {
   if (predictedWord === STOP_TAG) {
     predictWordStop();
   }
-}
+};
 
 // predict words on click
 startButton.addEventListener('click', async () => {
-  await transferLearningModelTrainBasic();
+  await transferLearningModelTrain();
   predictWordStart();
 });
 
-const transferLearningModelTrainBasic = async () => {
-  // Each instance of speech-command recognizer supports multiple
-// transfer-learning models, each of which can be trained for a different
-// new vocabulary.
-// therefore, we give a name to the transfer-learning model we are about to
-// train ('colors' in this case).
-  transferRecognizer = baseRecognizer.createTransfer('colors');
-
-// Call `collectExample()` to collect a number of audio examples
-// via WebAudio.
-  console.log('noise')
-  await transferRecognizer.collectExample('_background_noise_');
-  await transferRecognizer.collectExample('_background_noise_');
-
-  console.log('car')
-  await transferRecognizer.collectExample('car');
-  await transferRecognizer.collectExample('car');
-  console.log('done')
-
-// You can check the counts of examples for different words that have been
-// collect for this transfer-learning model.
-  console.log(transferRecognizer.countExamples());
-// e.g., {'red': 2, 'green': 2', 'blue': 2, '_background_noise': 2};
-
-// Start training of the transfer-learning model.
-// You can specify `epochs` (number of training epochs) and `callback`
-// (the Model.fit callback to use during training), among other configuration
-// fields.
-  await transferRecognizer.train({
-    epochs: 25,
-    callback: {
-      onEpochEnd: async (epoch, logs) => {
-        console.log(`Epoch ${epoch}: loss=${logs.loss}, accuracy=${logs.acc}`);
-      }
-    }
-  });
-}
 const transferLearningModelTrain = async () => {
   console.log(transferRecognizer.countExamples());
 
@@ -146,11 +109,10 @@ const transferLearningModelTrain = async () => {
     callback: {
       onEpochEnd: async (epoch, logs) => {
         console.log(`Epoch ${epoch}: loss=${logs.loss}, accuracy=${logs.acc}`);
-      }
-    }
+      },
+    },
   });
-}
-
+};
 
 
 // *** bookmark-4 *** download file button
@@ -161,13 +123,13 @@ downloadAsFileButton.addEventListener('click', () => {
 
   // Trigger downloading of the data .bin file.
   const anchor = document.createElement('a');
-  const blob = new Blob([artifacts], {type: 'application/octet-stream'})
+  const blob = new Blob([artifacts], {type: 'application/octet-stream'});
   anchor.download = `${basename}.bin`;
-  anchor.href = window.URL.createObjectURL(blob)
-  anchor.title = basename
+  anchor.href = window.URL.createObjectURL(blob);
+  anchor.title = basename;
   anchor.appendChild(linkText);
   document.body.appendChild(anchor);
-  anchor.click()
+  anchor.click();
 });
 
 // *** bookmark-6 *** UPLOAD DATASET FILE
@@ -177,11 +139,11 @@ uploadFilesButton.addEventListener('click', async () => {
     throw new Error('Must select exactly one file.');
   }
   const datasetFileReader = new FileReader();
-  datasetFileReader.onload = async event => {
+  datasetFileReader.onload = async (event) => {
     try {
       await loadDatasetInTransferRecognizer(event.target.result);
     } catch (err) {
-      console.log(err)
+      console.log(err);
       const originalTextContent = uploadFilesButton.textContent;
       uploadFilesButton.textContent = err.message;
       setTimeout(() => {
@@ -211,8 +173,8 @@ async function loadDatasetInTransferRecognizer(serialized) {
   let modelName = transferModelNameInput.value;
   if (modelName == null || modelName.length === 0) {
     console.log('setting default model name as none was given');
-    transferModelNameInput.value = getDateString()
-    modelName = transferModelNameInput.value
+    transferModelNameInput.value = getDateString();
+    modelName = transferModelNameInput.value;
   }
 
   if (transferRecognizer == null) {
@@ -232,7 +194,7 @@ async function loadDatasetInTransferRecognizer(serialized) {
       // multiplier of the dataset.
       if (word !== BACKGROUND_NOISE_TAG) {
         durationMultipliers.push(Math.round(
-          spectrogram.data.length / spectrogram.frameSize / modelNumFrames));
+            spectrogram.data.length / spectrogram.frameSize / modelNumFrames));
       }
     }
   }
@@ -245,7 +207,7 @@ async function loadDatasetInTransferRecognizer(serialized) {
   console.log(LINE_BREAK_FORMATTED);
   console.log('DataSet Loaded!');
   console.log(
-    `Deteremined transferDurationMultiplier from uploaded ` +
+      `Deteremined transferDurationMultiplier from uploaded ` +
     `dataset: ${transferDurationMultiplier}`);
   console.log(transferRecognizer);
   console.log(LINE_BREAK_FORMATTED);
@@ -275,7 +237,7 @@ evalModelOnDatasetButton.addEventListener('click', async () => {
     throw new Error('Must select exactly one file.');
   }
   const datasetFileReader = new FileReader();
-  datasetFileReader.onload = async event => {
+  datasetFileReader.onload = async (event) => {
     try {
       if (transferRecognizer == null) {
         console.error('There is no model!');
@@ -287,10 +249,11 @@ evalModelOnDatasetButton.addEventListener('click', async () => {
       const evalResult = await transferRecognizer.evaluate({
         windowHopRatio: 0.25,
         wordProbThresholds: [
-          0,    0.05, 0.1,  0.15, 0.2,  0.25, 0.3,  0.35, 0.4,  0.5,
-          0.55, 0.6,  0.65, 0.7,  0.75, 0.8,  0.85, 0.9,  0.95, 1.0
-        ]
+          0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.5,
+          0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0,
+        ],
       });
+      console.log(evalResult);
     } catch (err) {
       const originalTextContent = evalModelOnDatasetButton.textContent;
       evalModelOnDatasetButton.textContent = err.message;
@@ -306,7 +269,7 @@ evalModelOnDatasetButton.addEventListener('click', async () => {
 
 // change filename label on input
 datasetFileInput.addEventListener('change', () => {
-  datasetFileInputLabel.innerHTML = datasetFileInput.files[0].name || 'Choose file'
+  datasetFileInputLabel.innerHTML = datasetFileInput.files[0].name || 'Choose file';
 });
 
 /** Get the base name of the downloaded files based on current dataset. */

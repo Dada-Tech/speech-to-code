@@ -10,7 +10,9 @@ This project comes paired with an attached research paper
 
 --- 
 ## How to run
-Open SpeechSynthesis.html in a browser
+(assuming you have yarn or npm installed)  
+* yarn install  
+* yarn start
 
 ## Permissions
 It requires microphone permissions, asked via browser.
