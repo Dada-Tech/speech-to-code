@@ -4,6 +4,7 @@
 const startButton = document.getElementById('start');
 const uploadFilesButton = document.getElementById('upload-dataset');
 const datasetFileInput = document.getElementById('dataset-file-input');
+const datasetFileInputLabel = document.getElementById('dataset-file-input-label');
 const downloadAsFileButton = document.getElementById('download-dataset');
 const loadTransferModelButton = document.getElementById('load-transfer-model');
 const durationMultiplierSelect = document.getElementById('duration-multiplier');
@@ -30,6 +31,27 @@ const STOP_TAG = 'stop'
 //    - includeEmbedding
 const recognitionConfig = {
   probabilityThreshold: 0.75
+}
+
+// INIT
+export async function app() {
+  // When calling `create()`, you must provide the type of the audio input.
+  // The two available options are `BROWSER_FFT` and `SOFT_FFT`.
+  // - BROWSER_FFT uses the browser's native Fourier transform.
+  // - SOFT_FFT uses JavaScript implementations of Fourier transform
+  //   (not implemented yet).
+  baseRecognizer = speechCommands.create('BROWSER_FFT');
+
+  // Make sure that the underlying model and metadata are loaded via HTTPS
+  // requests.
+  await baseRecognizer.ensureModelLoaded();
+
+  recognizer = baseRecognizer;
+
+  await populateSavedTransferModelsSelect();
+
+  // transferRecognizer = baseRecognizer;
+  // predictWordStart();
 }
 
 const predictWordStart = () => {
@@ -67,27 +89,6 @@ const onWordRecognize = (result) => {
   if (predictedWord === STOP_TAG) {
     predictWordStop();
   }
-}
-
-// INIT
-export async function app() {
-  // When calling `create()`, you must provide the type of the audio input.
-  // The two available options are `BROWSER_FFT` and `SOFT_FFT`.
-  // - BROWSER_FFT uses the browser's native Fourier transform.
-  // - SOFT_FFT uses JavaScript implementations of Fourier transform
-  //   (not implemented yet).
-  baseRecognizer = speechCommands.create('BROWSER_FFT');
-
-  // Make sure that the underlying model and metadata are loaded via HTTPS
-  // requests.
-  await baseRecognizer.ensureModelLoaded();
-
-  recognizer = baseRecognizer;
-  console.log(baseRecognizer)
-
-  await populateSavedTransferModelsSelect();
-  // transferRecognizer = baseRecognizer;
-  // predictWordStart();
 }
 
 // predict words on click
@@ -301,6 +302,11 @@ evalModelOnDatasetButton.addEventListener('click', async () => {
   datasetFileReader.onerror = () =>
     console.error(`Failed to binary data from file '${dataFile.name}'.`);
   datasetFileReader.readAsArrayBuffer(files[0]);
+});
+
+// change filename label on input
+datasetFileInput.addEventListener('change', () => {
+  datasetFileInputLabel.innerHTML = datasetFileInput.files[0].name || 'Choose file'
 });
 
 /** Get the base name of the downloaded files based on current dataset. */
