@@ -2,7 +2,6 @@
   "name": "speech-to-code",
   "version": "1.0.0",
   "description": "Limited Keyword Speech Synthesis Leveraging Transfer Learning",
-  "main": "index.js",
   "type": "module",
   "author": "David Dada",
   "license": "ISC",
@@ -40,17 +39,19 @@
   "devDependencies": {
     "@babel/core": "^7.0.0-0",
     "@babel/plugin-transform-runtime": "^7.1.0",
-    "babel-polyfill": "~6.26.0",
-    "babel-preset-env": "~1.6.1",
+    "@babel/plugin-proposal-object-rest-spread": "^7.17.3",
+    "@babel/plugin-transform-destructuring": "^7.17.7",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
     "babel-preset-es2017": "^6.24.1",
-    "clang-format": "~1.2.2",
-    "cross-env": "^5.2.0",
+    "clang-format": "^1.7.0",
+    "cross-env": "^7.0.3",
     "dat.gui": "^0.7.1",
-    "eslint": "^4.19.1",
-    "eslint-config-google": "^0.9.1",
-    "parcel-bundler": "~1.12.5",
-    "plotly.js-dist": "^1.39.4",
-    "yalc": "~1.0.0-pre.50"
+    "eslint": "^8.14.0",
+    "eslint-config-google": "^0.14.0",
+    "parcel": "^2.5.0",
+    "plotly.js-dist": "^2.11.1",
+    "yalc": "^1.0.0-pre.53"
   },
   "resolutions": {
     "is-svg": "4.3.1"
