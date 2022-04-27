@@ -4,12 +4,7 @@ const CODE_MIRROR_INITIAL_VALUE =
   + '\nlet x = 2\n'
   + 'return x'
 
-const instructions = $("#instructions")
 const compiledCodeOutputConsole = document.getElementById('result')
-
-const setInstructions = (text) => {
-  instructions.text(text)
-}
 
 // create CodeMirror text editor
 const editor = CodeMirror.fromTextArea(document.getElementById('textbox'), {
@@ -17,7 +12,10 @@ const editor = CodeMirror.fromTextArea(document.getElementById('textbox'), {
   lineNumbers: true,
   theme: "darcula"
 });
-editor.save()
+
+export const initCodeConsole = () => {
+  editor.save()
+}
 
 const updateCodeMirror = (data) => {
   var doc = editor.getDoc();

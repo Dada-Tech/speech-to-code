@@ -1,5 +1,5 @@
-// tf imported from script CDN
-// speechCommands imported from script CDN
+const tf = require('@tensorflow/tfjs');
+const speechCommands = require('@tensorflow-models/speech-commands');
 
 const startButton = document.getElementById('start');
 const uploadFilesButton = document.getElementById('upload-dataset');
