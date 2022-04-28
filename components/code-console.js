@@ -18,8 +18,8 @@ export const initCodeConsole = () => {
 }
 
 const updateCodeMirror = (data) => {
-  var doc = editor.getDoc();
-  var cursor = doc.getCursor(); // gets the line number in the cursor position
+  const doc = editor.getDoc();
+  const cursor = doc.getCursor(); // gets the line number in the cursor position
   doc.replaceRange(data, cursor); // adds a new line
 }
 

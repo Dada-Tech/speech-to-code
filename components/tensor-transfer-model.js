@@ -156,7 +156,7 @@ uploadFilesButton.addEventListener('click', async () => {
     durationMultiplierSelect.value = `${transferDurationMultiplier}`;
   };
   datasetFileReader.onerror = () =>
-    console.error(`Failed to binary data from file '${dataFile.name}'.`);
+    console.error('Failed to binary data from file');
   datasetFileReader.readAsArrayBuffer(files[0]);
 });
 
@@ -267,7 +267,7 @@ evalModelOnDatasetButton.addEventListener('click', async () => {
     }
   };
   datasetFileReader.onerror = () =>
-    console.error(`Failed to binary data from file '${dataFile.name}'.`);
+    console.error('Failed to binary data from file');
   datasetFileReader.readAsArrayBuffer(files[0]);
 });
 
