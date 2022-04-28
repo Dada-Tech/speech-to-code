@@ -1,3 +1,4 @@
+import 'animate.css';
 import { initCodeConsole } from './components/code-console.js';
 import { initTensorNLP } from './components/tensor-transfer-model.js';
 

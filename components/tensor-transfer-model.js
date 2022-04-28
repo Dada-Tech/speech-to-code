@@ -10,7 +10,6 @@ const datasetFileInput = document.getElementById('dataset-file-input');
 const datasetFileInputLabel = document.getElementById('dataset-file-input-label');
 const downloadAsFileButton = document.getElementById('download-dataset');
 const loadTransferModelButton = document.getElementById('load-transfer-model');
-const durationMultiplierSelect = document.getElementById('duration-multiplier');
 const savedTransferModelsSelect =
   document.getElementById('saved-transfer-models');
 const evalModelOnDatasetButton =
@@ -18,12 +17,13 @@ const evalModelOnDatasetButton =
 const transferModelNameInput = document.getElementById('transfer-model-name');
 const learnWordsInput = document.getElementById('learn-words');
 const LINE_BREAK_FORMATTED = '--------------------------';
+const START_INSTRUCTIONS = 'Press "Start" to being listening';
 
 let baseRecognizer;
 let transferRecognizer;
 let transferWords = []; // Array of words that the recognizer is trained to recognize.
 let recognizer;
-let transferDurationMultiplier;
+let transferDurationMultiplier = 2;
 const BACKGROUND_NOISE_TAG = '_background_noise_';
 const STOP_TAG = 'stop';
 
@@ -58,15 +58,16 @@ export async function initTensorNLP() {
 }
 
 const predictWordStart = () => {
-  console.log('listening for words');
   // array of words that the recognizer is trained to recognize.
   transferWords = transferRecognizer.wordLabels();
-  console.log(transferWords);
+  setInstructions('Trained!\nListening for words: ' + transferWords.join(','));
 
   // `listen()` takes two arguments:
   // 1. A callback function that is invoked anytime a word is recognized.
   // 2. A configuration object with adjustable fields
   transferRecognizer.listen(onWordRecognize, recognitionConfig);
+
+  setStartButtonEnabled(false);
 };
 
 const predictWordStop = (seconds = 0) => {
@@ -74,6 +75,7 @@ const predictWordStop = (seconds = 0) => {
     baseRecognizer.stopListening();
     console.log('listening ended');
   }, seconds * 1000);
+  setStartButtonEnabled(true);
 };
 
 //  result.scores contains the probability scores that correspond to recognizer.wordLabels().
@@ -96,9 +98,14 @@ const onWordRecognize = (result) => {
 
 // predict words on click
 startButton.addEventListener('click', async () => {
+  setInstructions('...Training Transfer Model');
   await transferLearningModelTrain();
   predictWordStart();
 });
+
+const setStartButtonEnabled = (enabled) => {
+  startButton.disabled = !enabled
+}
 
 const transferLearningModelTrain = async () => {
   console.log(transferRecognizer.countExamples());
@@ -115,7 +122,9 @@ const transferLearningModelTrain = async () => {
       },
     },
   });
+  startButton.disabled = false
 };
+
 
 
 // *** bookmark-4 *** download file button
@@ -153,7 +162,6 @@ uploadFilesButton.addEventListener('click', async () => {
         uploadFilesButton.textContent = originalTextContent;
       }, 2000);
     }
-    durationMultiplierSelect.value = `${transferDurationMultiplier}`;
   };
   datasetFileReader.onerror = () =>
     console.error('Failed to binary data from file');
@@ -169,6 +177,8 @@ loadTransferModelButton.addEventListener('click', async () => {
   transferModelNameInput.value = transferModelName;
   learnWordsInput.value = transferRecognizer.wordLabels().join(',');
   loadTransferModelButton.textContent = 'Model loaded!';
+  setStartButtonEnabled(true);
+  setInstructions('Model Loaded!\n' + START_INSTRUCTIONS)
 });
 
 // *** bookmark-3 *** Load dataset
@@ -208,13 +218,13 @@ async function loadDatasetInTransferRecognizer(serialized) {
   transferDurationMultiplier =
     durationMultipliers.length > 0 ? Math.max(...durationMultipliers) : 1;
   console.log(LINE_BREAK_FORMATTED);
-  setInstructions('DataSet Loaded!\n Press "Start" to being listening');
+  setInstructions('DataSet Loaded!\n' + START_INSTRUCTIONS);
+  setStartButtonEnabled(true);
   console.log(
       `Determined transferDurationMultiplier from uploaded ` +
     `dataset: ${transferDurationMultiplier}`);
   console.log(transferRecognizer);
   console.log(LINE_BREAK_FORMATTED);
-
 }
 
 // *** bookmark-2 *** Populate Model fn
@@ -269,6 +279,7 @@ evalModelOnDatasetButton.addEventListener('click', async () => {
   datasetFileReader.onerror = () =>
     console.error('Failed to binary data from file');
   datasetFileReader.readAsArrayBuffer(files[0]);
+  setStartButtonEnabled(true);
 });
 
 // change filename label on input
@@ -277,5 +288,4 @@ datasetFileInput.addEventListener('change', () => {
   if(datasetFileInput.files.length > 0) {
     setInstructions('Click "Upload Dataset" to load the dataset.')
   }
-
 });

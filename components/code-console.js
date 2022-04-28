@@ -1,6 +1,6 @@
 const CODE_MIRROR_INITIAL_VALUE =
   '// Return a value to see it printed upon compilation\n'
-  + '// Otherwise follow instructions below.\n\n'
+  + '// Otherwise follow the instructions below.\n'
   + '\nlet x = 2\n'
   + 'return x'
 

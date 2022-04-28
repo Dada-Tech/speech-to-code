@@ -32,8 +32,13 @@
         <textarea id="textbox" rows="6" class="form-control"></textarea>
     </div>
 
+    <pre id="result"></pre>
+
     <div class="form-group">
-        <p class="h5 mb-5">Instructions: <span id="instructions">Start by choosing a Dataset File to upload</span></p>
+        <button id="run" class="btn btn-dark btn-block mt-4">Compile</button>
+        <button id="start" class="btn btn-danger btn-block" disabled>Start</button>
+
+        <p class="h5 mb-5 animate__animated animate__fadeIn">Instructions: <span id="instructions">Start by choosing a Dataset File to upload</span></p>
 
         <div class="input-group mt-2 mb-1">
             <div class="input-group-prepend">
@@ -47,41 +52,36 @@
             </div>
         </div>
 
-        <button id="eval-model-on-dataset" class="btn btn-block btn-info">Evaluate model on dataset</button>
+        <button id="eval-model-on-dataset" class="btn btn-block btn-info">Evaluate Model on Uploaded Dataset</button>
         <button id="download-dataset" class="btn btn-block btn-light">↓ Download dataset as file</button>
         <div class="transfer-learn-section mt-4">
-            <div class="h5 mb-4">Transfer Learn Section:</div>
+            <div class="h5 mb-4">Transfer Learning Section:</div>
 
-            <label for="saved-transfer-models" class="font-weight-bold">Saved Transfer Models</label>
-            <select id="saved-transfer-models" class="custom-select">
-                <option value="1"></option>
-            </select>
-            <button id="load-transfer-model" class="btn btn-block btn-info">Load Transfer Model</button>
+            <div class="my-4">
+                <label for="saved-transfer-models" class="font-weight-bold">Saved Transfer Models</label>
+                <select id="saved-transfer-models" class="custom-select">
+                    <option value="1"></option>
+                </select>
+                <button id="load-transfer-model" class="btn btn-block btn-info">Load Transfer Model</button>
+            </div>
 
-            <label for="transfer-model-name"></label>
-            <input id="transfer-model-name"
-                   class="form-control" size="20"
-                   placeholder="active model name">
+            <div class="my-4">
+                <label for="transfer-model-name" class="font-weight-bold">Transfer Model Name</label>
+                <input id="transfer-model-name"
+                       class="form-control" size="20"
+                       placeholder="active model name">
+            </div>
 
-            <label for="learn-words"></label>
-            <input id="learn-words" size="20" value="" class="form-control" placeholder="recognized keywords">
-
-            <label for="duration-multiplier"></label>
-            <select id="duration-multiplier" class="custom-select">
-                <option value="1">Duration x1</option>
-                <option value="2" selected>Duration x2</option>
-            </select>
+            <div class="my-4">
+                <label for="learn-words" class="font-weight-bold">Recognized Keywords</label>
+                <input id="learn-words" size="20" value="" class="form-control" placeholder="recognized keywords">
+            </div>
         </div>
 
 
         <div id="output"></div>
         <div id="output-tensor"></div>
-
-        <button id="run" class="btn btn-dark btn-block mt-4">Compile</button>
-        <button id="start" class="btn btn-danger btn-block">Start</button>
     </div>
-
-    <pre id="result"></pre>
 </div>
 
 <script type="module" src="index.js"></script>
