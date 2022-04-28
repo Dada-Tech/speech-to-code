@@ -1,4 +1,7 @@
 import { setInstructions, getDateString } from "./util.js";
+import { wordDict, wordDictFunctions } from "./word-dictionary.js";
+import { BACKGROUND_NOISE_TAG } from "@tensorflow-models/speech-commands";
+import {updateCodeMirror} from "./code-console.js";
 
 // noinspection JSUnusedLocalSymbols
 const tf = require('@tensorflow/tfjs');
@@ -24,8 +27,7 @@ let transferRecognizer;
 let transferWords = []; // Array of words that the recognizer is trained to recognize.
 let recognizer;
 let transferDurationMultiplier = 2;
-const BACKGROUND_NOISE_TAG = '_background_noise_';
-const STOP_TAG = 'stop';
+let hasPreTrainedModel = false;
 
 
 // baseRecognizer.listen config can adjust fields such as
@@ -33,7 +35,7 @@ const STOP_TAG = 'stop';
 //    - probabilityThreshold
 //    - includeEmbedding
 const recognitionConfig = {
-  probabilityThreshold: 0.75,
+  probabilityThreshold: 0.85,
 };
 
 // INIT
@@ -52,9 +54,6 @@ export async function initTensorNLP() {
   recognizer = baseRecognizer;
 
   await populateSavedTransferModelsSelect();
-
-  // transferRecognizer = baseRecognizer;
-  // predictWordStart();
 }
 
 const predictWordStart = () => {
@@ -87,19 +86,27 @@ const onWordRecognize = (result) => {
   // Find the most probable word.
   scores.sort((s1, s2) => s2.score - s1.score);
   const predictedWord = scores[0].word;
-  document.querySelector('#output-tensor').textContent = predictedWord;
 
+  setInstructions('Predicted word: ' + predictedWord);
   console.log(predictedWord);
+
+  if(wordDict[predictedWord]) {
+    updateCodeMirror(wordDict[predictedWord].code);
+    console.log('pasting mapped value of ' + predictedWord, wordDict[predictedWord].code);
+  }
+
   // stop when keyword stop is heard
-  if (predictedWord === STOP_TAG) {
+  if (predictedWord === wordDictFunctions.stop) {
     predictWordStop();
   }
 };
 
 // predict words on click
 startButton.addEventListener('click', async () => {
-  setInstructions('...Training Transfer Model');
-  await transferLearningModelTrain();
+  if(!hasPreTrainedModel) {
+    setInstructions('...Training Transfer Model');
+    await transferLearningModelTrain();
+  }
   predictWordStart();
 });
 
@@ -125,13 +132,10 @@ const transferLearningModelTrain = async () => {
   startButton.disabled = false
 };
 
-
-
 // *** bookmark-4 *** download file button
 downloadAsFileButton.addEventListener('click', () => {
   const basename = getDateString();
   const artifacts = transferRecognizer.serializeExamples();
-  const linkText = document.createTextNode(basename);
 
   // Trigger downloading of the data .bin file.
   const anchor = document.createElement('a');
@@ -139,7 +143,6 @@ downloadAsFileButton.addEventListener('click', () => {
   anchor.download = `${basename}.bin`;
   anchor.href = window.URL.createObjectURL(blob);
   anchor.title = basename;
-  anchor.appendChild(linkText);
   document.body.appendChild(anchor);
   anchor.click();
 });
@@ -166,6 +169,7 @@ uploadFilesButton.addEventListener('click', async () => {
   datasetFileReader.onerror = () =>
     console.error('Failed to binary data from file');
   datasetFileReader.readAsArrayBuffer(files[0]);
+  hasPreTrainedModel = false;
 });
 
 // *** bookmark-5 *** LOAD Model BUTTON
@@ -179,6 +183,7 @@ loadTransferModelButton.addEventListener('click', async () => {
   loadTransferModelButton.textContent = 'Model loaded!';
   setStartButtonEnabled(true);
   setInstructions('Model Loaded!\n' + START_INSTRUCTIONS)
+  hasPreTrainedModel = true;
 });
 
 // *** bookmark-3 *** Load dataset

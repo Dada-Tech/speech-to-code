@@ -38,7 +38,8 @@
         <button id="run" class="btn btn-dark btn-block mt-4">Compile</button>
         <button id="start" class="btn btn-danger btn-block" disabled>Start</button>
 
-        <p class="h5 mb-5 animate__animated animate__fadeIn">Instructions: <span id="instructions">Start by choosing a Dataset File to upload</span></p>
+        <p class="h5 mb-5 animate__animated animate__fadeIn">Instructions: <span id="instructions">Start by choosing a Dataset File to upload</span>
+        </p>
 
         <div class="input-group mt-2 mb-1">
             <div class="input-group-prepend">
@@ -52,7 +53,8 @@
             </div>
         </div>
 
-        <button id="eval-model-on-dataset" class="btn btn-block btn-info">Evaluate Saved Model on Uploaded Dataset</button>
+        <button id="eval-model-on-dataset" class="btn btn-block btn-info">Evaluate Saved Model on Uploaded Dataset
+        </button>
         <button id="download-dataset" class="btn btn-block btn-light">↓ Download dataset as file</button>
         <div class="transfer-learn-section mt-4">
             <div class="h5 mb-4">Transfer Learning Section:</div>
@@ -77,10 +79,11 @@
                 <input id="learn-words" size="20" value="" class="form-control" placeholder="recognized keywords">
             </div>
         </div>
+    </div>
 
-
-        <div id="output"></div>
-        <div id="output-tensor"></div>
+    <div>
+        <div class="h5 mt-5">Static Keyword Dictionary:</div>
+        <pre id="dictionary"></pre>
     </div>
 </div>
 
