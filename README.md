@@ -19,6 +19,5 @@ It requires microphone permissions, asked via browser.
 
 ---
 
-## Files:
-#### SpeechSynthesis.html
-* Main file that imports dependencies
+## Seeing Samples:
+Upload datasets in /datasets to https://storage.googleapis.com/tfjs-speech-model-test/2019-01-03a/dist/index.html

@@ -35,7 +35,7 @@ let hasPreTrainedModel = false;
 //    - probabilityThreshold
 //    - includeEmbedding
 const recognitionConfig = {
-  probabilityThreshold: 0.85,
+  probabilityThreshold: 0.98,
 };
 
 // INIT
