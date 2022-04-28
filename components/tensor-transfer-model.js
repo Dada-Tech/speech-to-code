@@ -1,3 +1,6 @@
+import { setInstructions, getDateString } from "./util.js";
+
+// noinspection JSUnusedLocalSymbols
 const tf = require('@tensorflow/tfjs');
 const speechCommands = require('@tensorflow-models/speech-commands');
 
@@ -205,12 +208,13 @@ async function loadDatasetInTransferRecognizer(serialized) {
   transferDurationMultiplier =
     durationMultipliers.length > 0 ? Math.max(...durationMultipliers) : 1;
   console.log(LINE_BREAK_FORMATTED);
-  console.log('DataSet Loaded!');
+  setInstructions('DataSet Loaded!\n Press "Start" to being listening');
   console.log(
-      `Deteremined transferDurationMultiplier from uploaded ` +
+      `Determined transferDurationMultiplier from uploaded ` +
     `dataset: ${transferDurationMultiplier}`);
   console.log(transferRecognizer);
   console.log(LINE_BREAK_FORMATTED);
+
 }
 
 // *** bookmark-2 *** Populate Model fn
@@ -270,31 +274,8 @@ evalModelOnDatasetButton.addEventListener('click', async () => {
 // change filename label on input
 datasetFileInput.addEventListener('change', () => {
   datasetFileInputLabel.innerHTML = datasetFileInput.files[0].name || 'Choose file';
-});
+  if(datasetFileInput.files.length > 0) {
+    setInstructions('Click "Upload Dataset" to load the dataset.')
+  }
 
-/** Get the base name of the downloaded files based on current dataset. */
-function getDateString() {
-  const d = new Date();
-  const year = `${d.getFullYear()}`;
-  let month = `${d.getMonth() + 1}`;
-  let day = `${d.getDate()}`;
-  if (month.length < 2) {
-    month = `0${month}`;
-  }
-  if (day.length < 2) {
-    day = `0${day}`;
-  }
-  let hour = `${d.getHours()}`;
-  if (hour.length < 2) {
-    hour = `0${hour}`;
-  }
-  let minute = `${d.getMinutes()}`;
-  if (minute.length < 2) {
-    minute = `0${minute}`;
-  }
-  let second = `${d.getSeconds()}`;
-  if (second.length < 2) {
-    second = `0${second}`;
-  }
-  return `${year}-${month}-${day}T${hour}.${minute}.${second}`;
-}
+});

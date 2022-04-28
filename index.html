@@ -49,24 +49,35 @@
 
         <button id="eval-model-on-dataset" class="btn btn-block btn-info">Evaluate model on dataset</button>
         <button id="download-dataset" class="btn btn-block btn-light">↓ Download dataset as file</button>
-        <label for="saved-transfer-models"></label><select id="saved-transfer-models">
-        <option value="1"></option>
-    </select>
-        <button id="load-transfer-model" class="btn btn-block btn-info">Load Transfer Model</button>
-        <div class="transfer-learn-section">
-            <label for="transfer-model-name"></label><input id="transfer-model-name" size="20" placeholder="model name">
-            <label for="learn-words"></label><input id="learn-words" size="36" value="_background_noise_,red,green">
-            <label for="duration-multiplier"></label><select id="duration-multiplier">
-            <option value="1">Duration x1</option>
-            <option value="2" selected>Duration x2</option>
-        </select>
+        <div class="transfer-learn-section mt-4">
+            <div class="h5 mb-4">Transfer Learn Section:</div>
+
+            <label for="saved-transfer-models" class="font-weight-bold">Saved Transfer Models</label>
+            <select id="saved-transfer-models" class="custom-select">
+                <option value="1"></option>
+            </select>
+            <button id="load-transfer-model" class="btn btn-block btn-info">Load Transfer Model</button>
+
+            <label for="transfer-model-name"></label>
+            <input id="transfer-model-name"
+                   class="form-control" size="20"
+                   placeholder="active model name">
+
+            <label for="learn-words"></label>
+            <input id="learn-words" size="20" value="" class="form-control" placeholder="recognized keywords">
+
+            <label for="duration-multiplier"></label>
+            <select id="duration-multiplier" class="custom-select">
+                <option value="1">Duration x1</option>
+                <option value="2" selected>Duration x2</option>
+            </select>
         </div>
 
 
         <div id="output"></div>
         <div id="output-tensor"></div>
 
-        <button id="run" class="btn btn-dark btn-block">Compile</button>
+        <button id="run" class="btn btn-dark btn-block mt-4">Compile</button>
         <button id="start" class="btn btn-danger btn-block">Start</button>
     </div>
 
