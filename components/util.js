@@ -1,4 +1,4 @@
-import { config } from "./config.js";
+import { speechCodeConfig } from "./config.js";
 
 const instructions = $("#instructions")
 
@@ -7,7 +7,7 @@ export const setInstructions = (text) => {
 }
 
 export const log = (message) => {
-  if(config.LOGGING) {
+  if (speechCodeConfig.LOGGING) {
     console.log(message);
   }
 }
@@ -37,4 +37,14 @@ export const getDateString = () => {
     second = `0${second}`;
   }
   return `${year}-${month}-${day}T${hour}.${minute}.${second}`;
+}
+
+// change filename label on input
+export const fileNameListen = (FileInputElement, FileInputLabel, onChangeFn) => {
+  FileInputElement.addEventListener('change', () => {
+    FileInputLabel.innerHTML = FileInputElement.files[0].name || 'Choose file';
+    if (FileInputElement.files.length > 0) {
+      onChangeFn()
+    }
+  });
 }

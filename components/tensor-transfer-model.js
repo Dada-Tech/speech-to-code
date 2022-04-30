@@ -1,8 +1,9 @@
 import { BACKGROUND_NOISE_TAG } from "@tensorflow-models/speech-commands";
-import { config } from "./config.js";
-import { setInstructions, getDateString } from "./util.js";
-import { wordDict, wordDictFunctions } from "../dictionary/default-word-dictionary.js";
+import { speechCodeConfig } from "./config.js";
+import { setInstructions, getDateString, fileNameListen } from "./util.js";
+import { onDictChange, wordDictFunctions } from "./dictionary.js";
 import { updateCodeMirror } from "./code-console.js";
+import { defaultWordDictionary } from "../dictionary/default-word-dictionary.js";
 
 // noinspection JSUnusedLocalSymbols
 const tf = require('@tensorflow/tfjs');
@@ -26,6 +27,7 @@ let transferRecognizer;
 let transferWords = []; // Array of words that the recognizer is trained to recognize.
 let recognizer;
 let transferDurationMultiplier = 2;
+let wordDict = defaultWordDictionary;
 
 // INIT
 export async function initTensorNLP() {
@@ -43,6 +45,9 @@ export async function initTensorNLP() {
   await populateSavedTransferModelsSelect();
 }
 
+// when the dictionary changes, update the word
+onDictChange((newDict) => wordDict = newDict);
+
 const predictWordStart = () => {
   // array of words that the recognizer is trained to recognize.
   transferWords = transferRecognizer.wordLabels();
@@ -51,7 +56,7 @@ const predictWordStart = () => {
   // `listen()` takes two arguments:
   // 1. A callback function that is invoked anytime a word is recognized.
   // 2. A configuration object with adjustable fields
-  transferRecognizer.listen(onWordRecognize, config.recognitionConfig);
+  transferRecognizer.listen(onWordRecognize, speechCodeConfig.recognitionConfig);
 
   setStartButtonEnabled(false);
 };
@@ -80,7 +85,7 @@ const onWordRecognize = (result) => {
   // stop when keyword stop is heard
   if (predictedWord === wordDictFunctions.stop) {
     predictWordStop();
-  } else if(wordDict[predictedWord]) {
+  } else if (wordDict[predictedWord]) {
     updateCodeMirror(wordDict[predictedWord].code);
     console.log('pasting mapped value of ' + predictedWord, wordDict[predictedWord].code);
   }
@@ -88,7 +93,7 @@ const onWordRecognize = (result) => {
 
 // predict words on click
 startButton.addEventListener('click', async () => {
-  if(!recognizer) {
+  if (!recognizer) {
     setInstructions('...Training Transfer Model');
     await transferLearningModelTrain();
   }
@@ -137,8 +142,9 @@ downloadAsFileButton.addEventListener('click', () => {
 // *** bookmark-6 *** UPLOAD DATASET FILE
 uploadFilesButton.addEventListener('click', async () => {
   const files = datasetFileInput.files;
-  if (files == null || files.length !== 1) {
-    throw new Error('Must select exactly one file.');
+  if (files === null || files.length !== 1) {
+    datasetFileInputLabel.innerHTML = speechCodeConfig.NO_FILE_MESSAGE_LABEL;
+    throw new Error(speechCodeConfig.NO_FILE_ERROR_MESSAGE);
   }
   const datasetFileReader = new FileReader();
   datasetFileReader.onload = async (event) => {
@@ -154,7 +160,7 @@ uploadFilesButton.addEventListener('click', async () => {
     }
   };
   datasetFileReader.onerror = () =>
-    console.error('Failed to binary data from file');
+    console.error(speechCodeConfig.FAILED_BINARY_FILE_READ_ERROR_MESSAGE);
   datasetFileReader.readAsArrayBuffer(files[0]);
 });
 
@@ -170,7 +176,7 @@ loadTransferModelButton.addEventListener('click', async () => {
   recognizer = transferRecognizer;
 
   setStartButtonEnabled(true);
-  setInstructions('Model Loaded!\n' + config.START_INSTRUCTIONS)
+  setInstructions('Model Loaded!\n' + speechCodeConfig.START_INSTRUCTIONS)
 });
 
 // *** bookmark-3 *** Load dataset
@@ -199,7 +205,7 @@ async function loadDatasetInTransferRecognizer(serialized) {
       // multiplier of the dataset.
       if (word !== BACKGROUND_NOISE_TAG) {
         durationMultipliers.push(Math.round(
-            spectrogram.data.length / spectrogram.frameSize / modelNumFrames));
+          spectrogram.data.length / spectrogram.frameSize / modelNumFrames));
       }
     }
   }
@@ -209,14 +215,14 @@ async function loadDatasetInTransferRecognizer(serialized) {
   // Determine the transferDurationMultiplier value from the dataset.
   transferDurationMultiplier =
     durationMultipliers.length > 0 ? Math.max(...durationMultipliers) : 1;
-  console.log(config.LINE_BREAK_FORMATTED);
-  setInstructions('DataSet Loaded!\n' + config.START_INSTRUCTIONS);
+  console.log(speechCodeConfig.LINE_BREAK_FORMATTED);
+  setInstructions('DataSet Loaded!\n' + speechCodeConfig.START_INSTRUCTIONS);
   setStartButtonEnabled(true);
   console.log(
-      `Determined transferDurationMultiplier from uploaded ` +
+    `Determined transferDurationMultiplier from uploaded ` +
     `dataset: ${transferDurationMultiplier}`);
   console.log(transferRecognizer);
-  console.log(config.LINE_BREAK_FORMATTED);
+  console.log(speechCodeConfig.LINE_BREAK_FORMATTED);
 }
 
 // *** bookmark-2 *** Populate Model fn
@@ -239,14 +245,14 @@ async function populateSavedTransferModelsSelect() {
 // *** bookmark-7 EVALUATE MODEL ON DATASET
 evalModelOnDatasetButton.addEventListener('click', async () => {
   const files = datasetFileInput.files;
-  if (files == null || files.length !== 1) {
-    throw new Error('Must select exactly one file.');
+  if (files === null || files.length !== 1) {
+    throw new Error(speechCodeConfig.NO_FILE_ERROR_MESSAGE);
   }
   const datasetFileReader = new FileReader();
   datasetFileReader.onload = async (event) => {
     try {
-      if (transferRecognizer == null) {
-        console.error('There is no model!');
+      if (transferRecognizer === null) {
+        console.error(speechCodeConfig.NO_MODEL_ERROR_MESSAGE);
       }
 
       // Load the dataset and perform evaluation of the transfer
@@ -269,15 +275,10 @@ evalModelOnDatasetButton.addEventListener('click', async () => {
     }
   };
   datasetFileReader.onerror = () =>
-    console.error('Failed to binary data from file');
+    console.error(speechCodeConfig.FAILED_BINARY_FILE_READ_ERROR_MESSAGE);
   datasetFileReader.readAsArrayBuffer(files[0]);
   setStartButtonEnabled(true);
 });
 
-// change filename label on input
-datasetFileInput.addEventListener('change', () => {
-  datasetFileInputLabel.innerHTML = datasetFileInput.files[0].name || 'Choose file';
-  if(datasetFileInput.files.length > 0) {
-    setInstructions('Click "Upload Dataset" to load the dataset.')
-  }
-});
+// change dataset filename label on input
+fileNameListen(datasetFileInput, datasetFileInputLabel, () => setInstructions('Click "Upload Dataset" to load the dataset.'))

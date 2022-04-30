@@ -1,6 +1,4 @@
-const dictionary = document.getElementById('dictionary');
-
-export const wordDict = {
+export const defaultWordDictionary = {
   function: {
     code: 'function temp() {\n' +
       '  \n' +
@@ -32,15 +30,3 @@ export const wordDict = {
     description: 'will paste the word "Green"'
   },
 }
-
-export const wordDictFunctions = {
-  stop: 'stop'
-}
-
-const setDict = () => {
-  let dictString = ""
-  Object.keys(wordDict).forEach(word => dictString += `${word}: ${wordDict[word].description}\n`)
-  dictionary.innerHTML = dictString;
-}
-
-setDict();

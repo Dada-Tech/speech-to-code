@@ -11,8 +11,24 @@ const recognitionConfig = {
 const LOGGING = true;
 const LINE_BREAK_FORMATTED = '--------------------------'; // separator used in logging
 
-//  - Code Console -
+//  - Instructions -
 const START_INSTRUCTIONS = 'Press "Start" to being listening';
 
+// - Error Messages -
+const NO_FILE_MESSAGE_LABEL = 'Must select exactly one file! Click here to upload file.'
+const NO_FILE_ERROR_MESSAGE = 'Must select exactly one file.';
+const FAILED_FILE_READ_ERROR_MESSAGE = 'Failed to read file';
+const FAILED_BINARY_FILE_READ_ERROR_MESSAGE = 'Failed to read binary data from file';
+const NO_MODEL_ERROR_MESSAGE = 'There is no model!';
 
-export const config = { recognitionConfig, LOGGING, LINE_BREAK_FORMATTED, START_INSTRUCTIONS }
+export const speechCodeConfig = {
+  recognitionConfig,
+  LOGGING,
+  LINE_BREAK_FORMATTED,
+  START_INSTRUCTIONS,
+  NO_FILE_MESSAGE_LABEL,
+  NO_FILE_ERROR_MESSAGE,
+  FAILED_BINARY_FILE_READ_ERROR_MESSAGE,
+  FAILED_FILE_READ_ERROR_MESSAGE,
+  NO_MODEL_ERROR_MESSAGE
+}
