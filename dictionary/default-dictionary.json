@@ -1,14 +1,14 @@
 {
   "function": {
-    "code": "function fn() {\n  \n}",
-    "description": "paste a javascript function"
+    "code": "function somefunction() {\n  \n}",
+    "description": "Paste a Javascript function"
   },
-  "ifelse": {
-    "code": "if () {\n  \n} else {\n  \n}",
-    "description": "paste an empty if-else block"
+  "fire": {
+    "code": "\uD83D\uDD25 \uD83D\uDD25 \uD83D\uDD25",
+    "description": "Paste fire emojis"
   },
-  "trycatch": {
-    "code": "try {\n  \n} catch(e) {\n  console.log(e);\n}",
-    "description": "paste a formatted try-catch block with error printing"
+  "red": {
+    "code": "\"Red\"",
+    "description": "Paste the word 'Red'"
   }
 }
