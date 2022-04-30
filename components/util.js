@@ -63,7 +63,9 @@ export const setTable = (element, dictionary) => {
 
     // create <td> for word
     const keywordTd = document.createElement("td");
-    const keywordTextNode = document.createTextNode(word);
+    // create <b> for word
+    const keywordTextNode = document.createElement("b");
+    keywordTextNode.innerHTML = word;
     keywordTd.appendChild(keywordTextNode);
 
     // create <td> for description
