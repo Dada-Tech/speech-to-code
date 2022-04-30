@@ -1,5 +1,5 @@
 import { defaultWordDictionary } from "../dictionary/default-word-dictionary.js";
-import {fileNameListen, setInstructions} from "./util.js";
+import { fileNameListen } from "./util.js";
 import { speechCodeConfig } from "./config.js";
 
 const keywordFunctionsDictionaryElement = document.getElementById('keyword-functions');
@@ -64,5 +64,5 @@ setTable(keywordFunctionsDictionaryElement, wordDictFunctions);
 setDict(defaultWordDictionary);
 
 // change dictionary filename label on input
-fileNameListen(dictionaryFileInput, dictionaryFileInputLabel, () => setInstructions('Click "Upload Dictionary" to load the dictionary.'))
+fileNameListen(dictionaryFileInput, dictionaryFileInputLabel, () => dictionaryUploadButton.click())
 

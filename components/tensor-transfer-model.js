@@ -281,4 +281,4 @@ evalModelOnDatasetButton.addEventListener('click', async () => {
 });
 
 // change dataset filename label on input
-fileNameListen(datasetFileInput, datasetFileInputLabel, () => setInstructions('Click "Upload Dataset" to load the dataset.'))
+fileNameListen(datasetFileInput, datasetFileInputLabel, () => loadTransferModelButton.click())
