@@ -1,9 +1,8 @@
 import { BACKGROUND_NOISE_TAG } from "@tensorflow-models/speech-commands";
 import { speechCodeConfig } from "./config.js";
 import { setInstructions, getDateString, fileNameListen } from "./util.js";
-import { onDictChange, wordDictFunctions } from "./dictionary.js";
+import { onDictChange, wordDictFunctions, defaultWordDictionary } from "./dictionary.js";
 import { updateCodeMirror } from "./code-console.js";
-import { defaultWordDictionary } from "../dictionary/default-word-dictionary.js";
 
 // noinspection JSUnusedLocalSymbols
 const tf = require('@tensorflow/tfjs');
