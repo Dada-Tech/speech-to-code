@@ -2,7 +2,7 @@ import { defaultWordDictionary } from "../dictionary/default-word-dictionary.js"
 import { fileNameListen, setTable } from "./util.js";
 import { speechCodeConfig } from "./config.js";
 
-const keywordFunctionsDictionaryElement = document.getElementById('keyword-functions');
+const functionDictionaryElement = document.getElementById('function-dictionary');
 const dictionaryElement = document.getElementById('dictionary');
 const dictionaryUploadButton = document.getElementById('upload-dictionary');
 const dictionaryFileInput = document.getElementById('dictionary-file-input');
@@ -47,7 +47,7 @@ export const onDictChange = (callbackFn) => {
 }
 
 // set table of special keyword functions
-setTable(keywordFunctionsDictionaryElement, wordDictFunctions);
+setTable(functionDictionaryElement, wordDictFunctions);
 
 // set table of the default dictionary
 setDict(defaultWordDictionary);
