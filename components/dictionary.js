@@ -1,5 +1,5 @@
 import { defaultWordDictionary } from "../dictionary/default-word-dictionary.js";
-import { fileNameListen } from "./util.js";
+import { fileNameListen, setTable } from "./util.js";
 import { speechCodeConfig } from "./config.js";
 
 const keywordFunctionsDictionaryElement = document.getElementById('keyword-functions');
@@ -12,17 +12,6 @@ export const wordDictFunctions = {
   stop: {
     description: 'stop listening for keywords'
   }
-}
-
-/**
- *
- * @param element element to populate
- * @param dictionary dictionary of words
- */
-export const setTable = (element, dictionary) => {
-  let dictString = ""
-  Object.keys(dictionary).forEach(word => dictString += `${word}: ${dictionary[word].description}\n`)
-  element.innerHTML = dictString;
 }
 
 /**

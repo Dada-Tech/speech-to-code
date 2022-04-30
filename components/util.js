@@ -48,3 +48,14 @@ export const fileNameListen = (FileInputElement, FileInputLabel, onChangeFn) => 
     }
   });
 }
+
+/**
+ *
+ * @param element element to populate
+ * @param dictionary dictionary of words
+ */
+export const setTable = (element, dictionary) => {
+  let dictString = ""
+  Object.keys(dictionary).forEach(word => dictString += `${word}: ${dictionary[word].description}\n`)
+  element.innerHTML = dictString;
+}
