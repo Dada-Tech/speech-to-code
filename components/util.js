@@ -50,12 +50,40 @@ export const fileNameListen = (FileInputElement, FileInputLabel, onChangeFn) => 
 }
 
 /**
- *
  * @param element element to populate
  * @param dictionary dictionary of words
  */
 export const setTable = (element, dictionary) => {
-  let dictString = ""
-  Object.keys(dictionary).forEach(word => dictString += `${word}: ${dictionary[word].description}\n`)
-  element.innerHTML = dictString;
+  const dictBody = element.getElementsByTagName('tbody')[0];
+  dictBody.innerHTML = '';
+
+  Object.keys(dictionary).forEach(word => {
+    // create <tr>
+    const tr = document.createElement("tr");
+
+    // create <td> for word
+    const keywordTd = document.createElement("td");
+    const keywordTextNode = document.createTextNode(word);
+    keywordTd.appendChild(keywordTextNode);
+
+    // create <td> for description
+    const descriptionTd = document.createElement("td");
+    const descriptionTextNode = document.createTextNode(dictionary[word].description);
+    descriptionTd.appendChild(descriptionTextNode);
+
+    // create <td> for code
+    const codeTd = document.createElement("td");
+    // create <pre> for code
+    const codePre = document.createElement("pre");
+    codePre.innerHTML = dictionary[word].code ? (dictionary[word].code) : 'N/A'
+    codeTd.appendChild(codePre);
+
+    // add <td> rows to <tr>
+    tr.appendChild(keywordTd)
+    tr.appendChild(descriptionTd)
+    tr.appendChild(codeTd)
+
+    // add <tr> row to <tbody>
+    dictBody.appendChild(tr);
+  })
 }
