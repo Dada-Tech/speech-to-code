@@ -1,7 +1,8 @@
-import { setInstructions, getDateString } from "./util.js";
-import { wordDict, wordDictFunctions } from "./word-dictionary.js";
 import { BACKGROUND_NOISE_TAG } from "@tensorflow-models/speech-commands";
-import {updateCodeMirror} from "./code-console.js";
+import { config } from "./config.js";
+import { setInstructions, getDateString } from "./util.js";
+import { wordDict, wordDictFunctions } from "../dictionary/default-word-dictionary.js";
+import { updateCodeMirror } from "./code-console.js";
 
 // noinspection JSUnusedLocalSymbols
 const tf = require('@tensorflow/tfjs');
@@ -19,24 +20,12 @@ const evalModelOnDatasetButton =
   document.getElementById('eval-model-on-dataset');
 const transferModelNameInput = document.getElementById('transfer-model-name');
 const learnWordsInput = document.getElementById('learn-words');
-const LINE_BREAK_FORMATTED = '--------------------------';
-const START_INSTRUCTIONS = 'Press "Start" to being listening';
 
 let baseRecognizer;
 let transferRecognizer;
 let transferWords = []; // Array of words that the recognizer is trained to recognize.
 let recognizer;
 let transferDurationMultiplier = 2;
-let hasPreTrainedModel = false;
-
-
-// baseRecognizer.listen config can adjust fields such as
-//    - includeSpectrogram
-//    - probabilityThreshold
-//    - includeEmbedding
-const recognitionConfig = {
-  probabilityThreshold: 0.98,
-};
 
 // INIT
 export async function initTensorNLP() {
@@ -51,8 +40,6 @@ export async function initTensorNLP() {
   // requests.
   await baseRecognizer.ensureModelLoaded();
 
-  recognizer = baseRecognizer;
-
   await populateSavedTransferModelsSelect();
 }
 
@@ -64,14 +51,14 @@ const predictWordStart = () => {
   // `listen()` takes two arguments:
   // 1. A callback function that is invoked anytime a word is recognized.
   // 2. A configuration object with adjustable fields
-  transferRecognizer.listen(onWordRecognize, recognitionConfig);
+  transferRecognizer.listen(onWordRecognize, config.recognitionConfig);
 
   setStartButtonEnabled(false);
 };
 
 const predictWordStop = (seconds = 0) => {
   setTimeout(() => {
-    baseRecognizer.stopListening();
+    recognizer.stopListening();
     console.log('listening ended');
   }, seconds * 1000);
   setStartButtonEnabled(true);
@@ -90,20 +77,18 @@ const onWordRecognize = (result) => {
   setInstructions('Predicted word: ' + predictedWord);
   console.log(predictedWord);
 
-  if(wordDict[predictedWord]) {
-    updateCodeMirror(wordDict[predictedWord].code);
-    console.log('pasting mapped value of ' + predictedWord, wordDict[predictedWord].code);
-  }
-
   // stop when keyword stop is heard
   if (predictedWord === wordDictFunctions.stop) {
     predictWordStop();
+  } else if(wordDict[predictedWord]) {
+    updateCodeMirror(wordDict[predictedWord].code);
+    console.log('pasting mapped value of ' + predictedWord, wordDict[predictedWord].code);
   }
 };
 
 // predict words on click
 startButton.addEventListener('click', async () => {
-  if(!hasPreTrainedModel) {
+  if(!recognizer) {
     setInstructions('...Training Transfer Model');
     await transferLearningModelTrain();
   }
@@ -129,6 +114,8 @@ const transferLearningModelTrain = async () => {
       },
     },
   });
+
+  recognizer = transferRecognizer;
   startButton.disabled = false
 };
 
@@ -169,21 +156,21 @@ uploadFilesButton.addEventListener('click', async () => {
   datasetFileReader.onerror = () =>
     console.error('Failed to binary data from file');
   datasetFileReader.readAsArrayBuffer(files[0]);
-  hasPreTrainedModel = false;
 });
 
 // *** bookmark-5 *** LOAD Model BUTTON
 loadTransferModelButton.addEventListener('click', async () => {
   const transferModelName = savedTransferModelsSelect.value;
-  await recognizer.ensureModelLoaded(); // Recognizer is the base model
-  transferRecognizer = recognizer.createTransfer(transferModelName); // transfer recognizer is the model you trained
+  await baseRecognizer.ensureModelLoaded(); // Recognizer is the base model
+  transferRecognizer = baseRecognizer.createTransfer(transferModelName); // transfer recognizer is the model you trained
   await transferRecognizer.load();
   transferModelNameInput.value = transferModelName;
   learnWordsInput.value = transferRecognizer.wordLabels().join(',');
   loadTransferModelButton.textContent = 'Model loaded!';
+  recognizer = transferRecognizer;
+
   setStartButtonEnabled(true);
-  setInstructions('Model Loaded!\n' + START_INSTRUCTIONS)
-  hasPreTrainedModel = true;
+  setInstructions('Model Loaded!\n' + config.START_INSTRUCTIONS)
 });
 
 // *** bookmark-3 *** Load dataset
@@ -196,7 +183,7 @@ async function loadDatasetInTransferRecognizer(serialized) {
   }
 
   if (transferRecognizer == null) {
-    transferRecognizer = recognizer.createTransfer(modelName);
+    transferRecognizer = baseRecognizer.createTransfer(modelName);
   }
   transferRecognizer.loadExamples(serialized);
   const exampleCounts = transferRecognizer.countExamples();
@@ -222,14 +209,14 @@ async function loadDatasetInTransferRecognizer(serialized) {
   // Determine the transferDurationMultiplier value from the dataset.
   transferDurationMultiplier =
     durationMultipliers.length > 0 ? Math.max(...durationMultipliers) : 1;
-  console.log(LINE_BREAK_FORMATTED);
-  setInstructions('DataSet Loaded!\n' + START_INSTRUCTIONS);
+  console.log(config.LINE_BREAK_FORMATTED);
+  setInstructions('DataSet Loaded!\n' + config.START_INSTRUCTIONS);
   setStartButtonEnabled(true);
   console.log(
       `Determined transferDurationMultiplier from uploaded ` +
     `dataset: ${transferDurationMultiplier}`);
   console.log(transferRecognizer);
-  console.log(LINE_BREAK_FORMATTED);
+  console.log(config.LINE_BREAK_FORMATTED);
 }
 
 // *** bookmark-2 *** Populate Model fn

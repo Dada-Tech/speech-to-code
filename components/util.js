@@ -1,7 +1,15 @@
+import { config } from "./config.js";
+
 const instructions = $("#instructions")
 
 export const setInstructions = (text) => {
   instructions.text(text)
+}
+
+export const log = (message) => {
+  if(config.LOGGING) {
+    console.log(message);
+  }
 }
 
 /** Get the base name of the downloaded files based on current dataset. */
