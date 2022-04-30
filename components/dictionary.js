@@ -1,6 +1,6 @@
 import { fileNameListen, setTable } from "./util.js";
 import { speechCodeConfig } from "./config.js";
-export const defaultWordDictionary = require('../dictionary/main-dictionary.json');
+export const defaultWordDictionary = require('../dictionary/default-dictionary.json');
 
 const functionDictionaryElement = document.getElementById('function-dictionary');
 const dictionaryElement = document.getElementById('dictionary');
@@ -54,4 +54,3 @@ setDict(defaultWordDictionary);
 
 // change dictionary filename label on input
 fileNameListen(dictionaryFileInput, dictionaryFileInputLabel, () => dictionaryUploadButton.click())
-
