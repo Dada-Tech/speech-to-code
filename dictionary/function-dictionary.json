@@ -1,10 +1,26 @@
 {
   "stop": {
-    "description": "stop listening for keywords",
+    "description": "Stop listening for keywords",
     "category": "actions"
   },
   "javascript": {
-    "description": "optional wake word to start listening for keywords",
+    "description": "Optional wake word to start listening for keywords",
+    "category": "actions"
+  },
+  "categories": {
+    "description": "List categories of keyword commands",
+    "category": "actions"
+  },
+  "text": {
+    "description": "List all text commands",
+    "category": "actions"
+  },
+  "code": {
+    "description": "List all code commands",
+    "category": "actions"
+  },
+  "actions": {
+    "description": "List all action commands",
     "category": "actions"
   }
 }
