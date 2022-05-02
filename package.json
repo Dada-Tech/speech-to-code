@@ -36,7 +36,7 @@
   },
   "scripts": {
     "start": "yarn watch",
-    "watch": "parcel index.html --open",
+    "watch": "parcel index.html",
     "build": "cross-env NODE_OPTIONS=--max_old_space_size=4096 NODE_ENV=production parcel build index.html --public-url ./",
     "lint": "eslint ."
   },

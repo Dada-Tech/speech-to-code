@@ -1,0 +1,46 @@
+{
+  "function": {
+    "code": "const fn = () => {\n  \n};",
+    "description": "Paste a javascript function block"
+  },
+  "ifelse": {
+    "code": "if () {\n  \n} else {\n  \n}",
+    "description": "Paste an empty if-else block"
+  },
+  "trycatch": {
+    "code": "try {\n  \n} catch (e) {\n  console.log('An Error Occurred', e);\n} finally {\n  \n}",
+    "description": "Paste a formatted try-catch block with error handling"
+  },
+  "object loop": {
+    "code": "for (const [key, value] of Object.entries(anotherPerson)) {\n  console.log(`${key}: ${value}`);\n}",
+    "description": "Loop through the keys and values of an Objects"
+  },
+  "capitalize": {
+    "code": "str.replace(/\\b[a-z]/g, char => char.toUpperCase());",
+    "description": "Capitalize a string"
+  },
+  "stop": {
+    "description": "Stop listening for keywords",
+    "category": "actions"
+  },
+  "javascript": {
+    "description": "Optional wake word to start listening for keywords",
+    "category": "actions"
+  },
+  "categories": {
+    "description": "List categories of keyword commands",
+    "category": "actions"
+  },
+  "text": {
+    "description": "List all text commands",
+    "category": "actions"
+  },
+  "code": {
+    "description": "List all code commands",
+    "category": "actions"
+  },
+  "actions": {
+    "description": "List all action commands",
+    "category": "actions"
+  }
+}

@@ -1,10 +1,14 @@
 import { BACKGROUND_NOISE_TAG } from "@tensorflow-models/speech-commands";
 import { speechCodeConfig } from "./config.js";
-import { setInstructions, getDateString, fileNameListen } from "./util.js";
-import { onDictChange, wordDictFunctions, defaultWordDictionary } from "./dictionary.js";
+import { fileNameListen, getDateString, setInstructions, toastMessage } from "./util.js";
+import {
+  defaultWordDictionary,
+  extractDictionaryFunctions,
+  onDictChange,
+  systemFunctionDictionary,
+  extractDictionaryWords
+} from "./dictionary.js";
 import { updateCodeMirror } from "./code-console.js";
-import { toastMessage } from "./util.js";
-
 
 // noinspection JSUnusedLocalSymbols
 const tf = require('@tensorflow/tfjs');
@@ -29,6 +33,7 @@ let transferWords = []; // Array of words that the recognizer is trained to reco
 let recognizer;
 let transferDurationMultiplier = 2;
 let wordDictionary = defaultWordDictionary;
+let functionDictionary = systemFunctionDictionary;
 
 // INIT
 export async function initTensorNLP() {
@@ -46,8 +51,13 @@ export async function initTensorNLP() {
   await populateSavedTransferModelsSelect();
 }
 
-// when the dictionary changes, update the word
-onDictChange((dictionary) => wordDictionary = dictionary);
+// when the dictionaries change, update the word
+onDictChange((dictionary) => {
+  // set new dict
+  wordDictionary = extractDictionaryWords(dictionary)
+  // set new function dictionaries
+  functionDictionary = extractDictionaryFunctions(dictionary)
+});
 
 const predictWordStart = () => {
   // array of words that the recognizer is trained to recognize.
@@ -73,9 +83,9 @@ const predictWordStop = (seconds = 0) => {
 //  result.scores contains the probability scores that correspond to recognizer.wordLabels().
 //  result.spectrogram contains the spectrogram of the recognized word.
 const onWordRecognize = (result) => {
-  let {scores} = result;
+  let { scores } = result;
   // Turn scores into a list of (score,word) pairs.
-  scores = Array.from(scores).map((s, i) => ({score: s, word: transferWords[i]}));
+  scores = Array.from(scores).map((s, i) => ({ score: s, word: transferWords[i] }));
   // Find the most probable word.
   scores.sort((s1, s2) => s2.score - s1.score);
   const predictedWord = scores[0].word;
@@ -85,7 +95,7 @@ const onWordRecognize = (result) => {
   toastMessage(predictedWord);
 
   // stop when keyword stop is heard
-  if (predictedWord === wordDictFunctions.stop) {
+  if (predictedWord === functionDictionary.stop) {
     predictWordStop();
   } else if (wordDictionary[predictedWord]) {
     updateCodeMirror(wordDictionary[predictedWord].code);
@@ -133,7 +143,7 @@ downloadAsFileButton.addEventListener('click', () => {
 
   // Trigger downloading of the data .bin file.
   const anchor = document.createElement('a');
-  const blob = new Blob([artifacts], {type: 'application/octet-stream'});
+  const blob = new Blob([artifacts], { type: 'application/octet-stream' });
   anchor.download = `${basename}.bin`;
   anchor.href = window.URL.createObjectURL(blob);
   anchor.title = basename;

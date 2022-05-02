@@ -1,7 +1,8 @@
 import { fileNameListen, setTable } from "./util.js";
 import { speechCodeConfig } from "./config.js";
-export const defaultWordDictionary = require('../dictionary/default-dictionary.json');
-export const wordDictFunctions = require('../dictionary/function-dictionary.json');
+
+export const defaultWordDictionary = require('../dictionaries/default-dictionary.json');
+export const systemFunctionDictionary = require('../dictionaries/system-function-dictionary.json');
 
 const functionDictionaryElement = document.getElementById('function-dictionary');
 const dictionaryElement = document.getElementById('dictionary');
@@ -10,20 +11,75 @@ const dictionaryFileInput = document.getElementById('dictionary-file-input');
 const dictionaryFileInputLabel = document.getElementById('dictionary-file-input-label');
 
 /**
- * Populate table of the keyword dictionary
- * @param dictionary dictionary of words
+ * Populate table of the keyword dictionaries
+ * @param dictionary dictionaries of words
  */
 export const setWordDictionary = (dictionary) => {
   setTable(dictionaryElement, dictionary)
 }
 
 /**
- * Populate table of the function dictionary
- * @param dictionary dictionary of words
+ * Populate table of the function dictionaries
+ * @param dictionary dictionaries of words
  */
 export const setFunctionDictionary = (dictionary) => {
   setTable(functionDictionaryElement, dictionary)
 }
+
+/**
+ * Extract functions from keyword dictionaries
+ * @param dictionary word dictionaries
+ * @returns object of categories
+ */
+export const dictionaryCategories = (dictionary) => {
+  return {};
+};
+
+/**
+ * Extract dictionaries words of a category
+ * @param dictionary word dictionaries
+ * @param category dictionaries category
+ * @returns object of categories
+ */
+export const getDictionaryCategory = (dictionary, category) => {
+  return {};
+};
+
+/**
+ * Extract functions from keyword dictionaries
+ * @param dictionary word dictionaries
+ * @returns object of functions
+ */
+export const extractDictionaryFunctions = (dictionary) => {
+  const activeFunctionDictionary = {}
+
+  Object.entries(systemFunctionDictionary).forEach(([key, value]) => {
+    // if it exists in passed in dictionaries
+    if (dictionary[key]) {
+      // function exists
+      activeFunctionDictionary[key] = value
+    }
+  })
+  return activeFunctionDictionary;
+};
+
+/**
+ * Extract functions from keyword dictionaries
+ * @param dictionary word dictionaries
+ * @returns object of functions
+ */
+export const extractDictionaryWords = (dictionary) => {
+  const activeWordDictionary = {}
+
+  Object.entries(dictionary).forEach(([key, value]) => {
+    // if it isn't category
+    if (value.category !== speechCodeConfig.DICTIONARY_ACTION_LABEL) {
+      // it's a non-function word
+      activeWordDictionary[key] = value
+    }
+  })
+  return activeWordDictionary;
+};
 
 export const onDictChange = (callbackFn) => {
   dictionaryUploadButton.addEventListener('click', async () => {
@@ -32,11 +88,11 @@ export const onDictChange = (callbackFn) => {
       dictionaryFileInputLabel.innerHTML = speechCodeConfig.NO_FILE_MESSAGE_LABEL;
       return;
     }
-    
+
     const dictionaryFileReader = new FileReader();
     dictionaryFileReader.onload = async (event) => {
       try {
-        // set new word dictionary
+        // set new word dictionaries
         const newWordDictionary = JSON.parse('' + event.target.result);
         setWordDictionary(newWordDictionary);
         callbackFn(newWordDictionary);
@@ -50,10 +106,10 @@ export const onDictChange = (callbackFn) => {
 }
 
 // set table of special keyword functions
-setFunctionDictionary(wordDictFunctions);
+setFunctionDictionary(systemFunctionDictionary);
 
-// set table of the default dictionary
+// set table of the default dictionaries
 setWordDictionary(defaultWordDictionary);
 
-// change dictionary filename label on input
+// change dictionaries filename label on input
 fileNameListen(dictionaryFileInput, dictionaryFileInputLabel, () => dictionaryUploadButton.click())

@@ -10,6 +10,7 @@
         "sourceType": "module"
     },
     "rules": {
+        "object-curly-spacing": ["warn", "always"]
     },
     "ignorePatterns": ["dist"]
 }
