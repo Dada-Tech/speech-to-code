@@ -1,6 +1,7 @@
 import { fileNameListen, setTable } from "./util.js";
 import { speechCodeConfig } from "./config.js";
 export const defaultWordDictionary = require('../dictionary/default-dictionary.json');
+export const wordDictFunctions = require('../dictionary/function-dictionary.json');
 
 const functionDictionaryElement = document.getElementById('function-dictionary');
 const dictionaryElement = document.getElementById('dictionary');
@@ -8,18 +9,20 @@ const dictionaryUploadButton = document.getElementById('upload-dictionary');
 const dictionaryFileInput = document.getElementById('dictionary-file-input');
 const dictionaryFileInputLabel = document.getElementById('dictionary-file-input-label');
 
-export const wordDictFunctions = {
-  stop: {
-    description: 'stop listening for keywords'
-  }
+/**
+ * Populate table of the keyword dictionary
+ * @param dictionary dictionary of words
+ */
+export const setWordDictionary = (dictionary) => {
+  setTable(dictionaryElement, dictionary)
 }
 
 /**
- * Populate table of keywords in a dictionary
+ * Populate table of the function dictionary
  * @param dictionary dictionary of words
  */
-export const setDict = (dictionary) => {
-  setTable(dictionaryElement, dictionary)
+export const setFunctionDictionary = (dictionary) => {
+  setTable(functionDictionaryElement, dictionary)
 }
 
 export const onDictChange = (callbackFn) => {
@@ -33,10 +36,10 @@ export const onDictChange = (callbackFn) => {
     const dictionaryFileReader = new FileReader();
     dictionaryFileReader.onload = async (event) => {
       try {
-        // set new dictionary
-        const newDict = JSON.parse('' + event.target.result);
-        setDict(newDict);
-        callbackFn(newDict);
+        // set new word dictionary
+        const newWordDictionary = JSON.parse('' + event.target.result);
+        setWordDictionary(newWordDictionary);
+        callbackFn(newWordDictionary);
       } catch (err) {
         console.log(err);
       }
@@ -47,10 +50,10 @@ export const onDictChange = (callbackFn) => {
 }
 
 // set table of special keyword functions
-setTable(functionDictionaryElement, wordDictFunctions);
+setFunctionDictionary(wordDictFunctions);
 
 // set table of the default dictionary
-setDict(defaultWordDictionary);
+setWordDictionary(defaultWordDictionary);
 
 // change dictionary filename label on input
 fileNameListen(dictionaryFileInput, dictionaryFileInputLabel, () => dictionaryUploadButton.click())

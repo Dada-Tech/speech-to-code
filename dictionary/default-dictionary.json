@@ -1,14 +1,17 @@
 {
   "function": {
     "code": "function somefunction() {\n  \n}",
-    "description": "Paste a javascript function block"
+    "description": "Paste a javascript function block",
+    "category": "code"
   },
   "fire": {
     "code": "\uD83D\uDD25 \uD83D\uDD25 \uD83D\uDD25",
-    "description": "Paste fire emojis"
+    "description": "Paste fire emojis",
+    "category": "text"
   },
   "red": {
     "code": "\"Red\"",
-    "description": "Paste the word 'Red'"
+    "description": "Paste the word 'Red'",
+    "category": "text"
   }
 }

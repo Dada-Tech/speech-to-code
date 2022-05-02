@@ -1,4 +1,9 @@
 import { speechCodeConfig } from "./config.js";
+import { Toast } from "bootstrap";
+
+const toastElement = document.getElementById('custom-toast');
+const toastText = document.getElementById('custom-toast-body');
+const toast = new Toast(toastElement);
 
 const instructions = $("#instructions")
 
@@ -77,15 +82,27 @@ export const setTable = (element, dictionary) => {
     const codeTd = document.createElement("td");
     // create <pre> for code
     const codePre = document.createElement("pre");
-    codePre.innerHTML = dictionary[word].code ? (dictionary[word].code) : 'N/A'
+    codePre.innerHTML = dictionary[word]?.code ?? 'N/A';
     codeTd.appendChild(codePre);
 
+    // create <td> for category
+    const categoryTd = document.createElement("td");
+    const categoryTextNode = document.createTextNode(dictionary[word]?.category ?? 'N/A');
+    categoryTd.appendChild(categoryTextNode);
+
     // add <td> rows to <tr>
-    tr.appendChild(keywordTd)
-    tr.appendChild(descriptionTd)
-    tr.appendChild(codeTd)
+    tr.appendChild(keywordTd);
+    tr.appendChild(descriptionTd);
+    tr.appendChild(codeTd);
+    tr.appendChild(categoryTd);
 
     // add <tr> row to <tbody>
     dictBody.appendChild(tr);
   })
+}
+
+// show toast message
+export const toastMessage = (message) => {
+  toastText.innerHTML = message;
+  toast.show()
 }

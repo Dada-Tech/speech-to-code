@@ -24,6 +24,7 @@ export const updateCodeMirror = (data) => {
 }
 
 // init values
+editor.setValue(''); // resets any cached instance
 updateCodeMirror(CODE_MIRROR_INITIAL_VALUE)
 
 // compile code & print result

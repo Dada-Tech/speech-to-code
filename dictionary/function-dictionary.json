@@ -1,0 +1,10 @@
+{
+  "stop": {
+    "description": "stop listening for keywords",
+    "category": "actions"
+  },
+  "javascript": {
+    "description": "optional wake word to start listening for keywords",
+    "category": "actions"
+  }
+}

@@ -19,9 +19,28 @@
     <script type="text/javascript"
             src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.2/codemirror.min.js"></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.16.0/mode/javascript/javascript.js'></script>
+    <style>
+      .toast-container {
+        position: absolute;
+        z-index: 1000;
+        top: 10px;
+        right: 20px;
+      }
+    </style>
 </head>
 
 <body>
+
+<div class="toast-container">
+    <div id="custom-toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Recognized Keyword</strong>
+        </div>
+        <div id="custom-toast-body" class="toast-body">
+
+        </div>
+    </div>
+</div>
 
 <div class="container">
     <h4 class="text-center mt-5">
@@ -83,12 +102,14 @@
 
     <div>
         <div class="h5 mt-5">Special Keyword Function Dictionary:</div>
+        <span>*Enabled when keywords exist in model</span>
         <table class="table" id="function-dictionary">
             <thead class="thead-dark">
             <tr>
                 <th scope="col">Keyword</th>
                 <th scope="col">Description</th>
                 <th scope="col">Code</th>
+                <th scope="col">Category</th>
             </tr>
             </thead>
             <tbody>
@@ -115,6 +136,7 @@
                 <th scope="col">Keyword</th>
                 <th scope="col">Description</th>
                 <th scope="col">Code</th>
+                <th scope="col">Category</th>
             </tr>
             </thead>
             <tbody>

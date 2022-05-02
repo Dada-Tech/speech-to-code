@@ -3,6 +3,8 @@ import { speechCodeConfig } from "./config.js";
 import { setInstructions, getDateString, fileNameListen } from "./util.js";
 import { onDictChange, wordDictFunctions, defaultWordDictionary } from "./dictionary.js";
 import { updateCodeMirror } from "./code-console.js";
+import { toastMessage } from "./util.js";
+
 
 // noinspection JSUnusedLocalSymbols
 const tf = require('@tensorflow/tfjs');
@@ -26,7 +28,7 @@ let transferRecognizer;
 let transferWords = []; // Array of words that the recognizer is trained to recognize.
 let recognizer;
 let transferDurationMultiplier = 2;
-let wordDict = defaultWordDictionary;
+let wordDictionary = defaultWordDictionary;
 
 // INIT
 export async function initTensorNLP() {
@@ -45,7 +47,7 @@ export async function initTensorNLP() {
 }
 
 // when the dictionary changes, update the word
-onDictChange((newDict) => wordDict = newDict);
+onDictChange((dictionary) => wordDictionary = dictionary);
 
 const predictWordStart = () => {
   // array of words that the recognizer is trained to recognize.
@@ -80,13 +82,14 @@ const onWordRecognize = (result) => {
 
   setInstructions('Predicted word: ' + predictedWord);
   console.log(predictedWord);
+  toastMessage(predictedWord);
 
   // stop when keyword stop is heard
   if (predictedWord === wordDictFunctions.stop) {
     predictWordStop();
-  } else if (wordDict[predictedWord]) {
-    updateCodeMirror(wordDict[predictedWord].code);
-    console.log('pasting mapped value of ' + predictedWord, wordDict[predictedWord].code);
+  } else if (wordDictionary[predictedWord]) {
+    updateCodeMirror(wordDictionary[predictedWord].code);
+    console.log('pasting mapped value of ' + predictedWord, wordDictionary[predictedWord].code);
   }
 };
 
