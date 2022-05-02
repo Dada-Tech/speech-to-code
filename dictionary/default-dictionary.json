@@ -1,7 +1,7 @@
 {
   "function": {
     "code": "function somefunction() {\n  \n}",
-    "description": "Paste a Javascript function"
+    "description": "Paste a javascript function block"
   },
   "fire": {
     "code": "\uD83D\uDD25 \uD83D\uDD25 \uD83D\uDD25",
