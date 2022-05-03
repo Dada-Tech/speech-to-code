@@ -3,6 +3,10 @@
     "description": "Stop listening for keywords",
     "category": "actions"
   },
+  "pause": {
+    "description": "Pause listening for keywords",
+    "category": "actions"
+  },
   "javascript": {
     "description": "Optional wake word to start listening for keywords",
     "category": "actions"
