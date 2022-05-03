@@ -4,6 +4,7 @@ import { Toast } from "bootstrap";
 const toastElement = document.getElementById('custom-toast');
 const toastText = document.getElementById('custom-toast-body');
 const toast = new Toast(toastElement);
+const loggingEnabled = speechCodeConfig.LOGGING;
 
 const instructions = $("#instructions")
 
@@ -12,7 +13,7 @@ export const setInstructions = (text) => {
 }
 
 export const logMessage = (message) => {
-  if (speechCodeConfig.LOGGING) {
+  if (loggingEnabled) {
     console.log(message);
   }
 }

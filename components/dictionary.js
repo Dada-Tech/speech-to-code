@@ -101,7 +101,7 @@ export const onDictChange = (callbackFn) => {
         setFunctionDictionary(extractDictionaryFunctions(newWordDictionary));
         callbackFn(newWordDictionary);
       } catch (err) {
-        console.log(err);
+        console.error(err);
       }
     };
     dictionaryFileReader.onerror = () => console.error(speechCodeConfig.FAILED_FILE_READ_ERROR_MESSAGE);
