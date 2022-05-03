@@ -13,6 +13,7 @@ const LINE_BREAK_FORMATTED = '--------------------------'; // separator used in 
 
 //  - Instructions -
 const START_INSTRUCTIONS = 'Press "Start" to being listening';
+const BEGINNING_INSTRUCTIONS = 'Start by choosing a Dataset file to upload or loading a saved Model';
 
 // Dictionary
 const DICTIONARY_ACTION_LABEL = 'actions'
@@ -33,6 +34,7 @@ const NO_MODEL_ERROR_MESSAGE = 'There is no model!';
 export const speechCodeConfig = {
   recognitionConfig,
   LOGGING,
+  BEGINNING_INSTRUCTIONS,
   LINE_BREAK_FORMATTED,
   START_INSTRUCTIONS,
   NO_FILE_MESSAGE_LABEL,

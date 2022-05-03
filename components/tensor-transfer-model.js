@@ -51,6 +51,9 @@ export async function initTensorNLP() {
   await baseRecognizer.ensureModelLoaded();
 
   await populateSavedTransferModelsSelect();
+
+  // set initial instructions
+  setInstructions(speechCodeConfig.BEGINNING_INSTRUCTIONS);
 }
 
 // when the dictionaries change, update the word
@@ -136,7 +139,7 @@ const functionKeywordRecognition = (word) => {
       toastMessage('Available Actions:\n' + Object.keys(functionDictionary).join(', '));
       break;
     case dictionaryCategories.DICTIONARY_CATEGORIES_LABEL:
-      toastMessage('Labels:\n' + [...getCategories(wordDictionary), ...getCategories(functionDictionary)].join(', '));
+      toastMessage('Action Categories:\n' + [...getCategories(wordDictionary), ...getCategories(functionDictionary)].join(', '));
       break;
     case dictionaryCategories.DICTIONARY_TEXT_LABEL:
       toastMessage('Text Actions:\n' + Object.keys(getWordsByCategory(wordDictionary, dictionaryCategories.DICTIONARY_TEXT_LABEL)).join(', '));
