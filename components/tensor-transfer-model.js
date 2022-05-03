@@ -128,7 +128,7 @@ const onWordRecognize = (result) => {
 
 const wordDictionaryRecognition = (word) => {
   updateCodeMirror(wordDictionary[word].code);
-  toastMessage('Keyword Recognized: ', word);
+  toastMessage('Keyword Recognized:\n' + word);
   logMessage('word: "' + word + '"');
   logMessage(wordDictionary[word].code);
 }
