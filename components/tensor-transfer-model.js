@@ -145,7 +145,7 @@ const functionKeywordRecognition = (word) => {
       toastMessage('Text Actions:\n' + Object.keys(getWordsByCategory(wordDictionary, dictionaryCategories.DICTIONARY_TEXT_LABEL)).join(', '));
       break;
     case dictionaryCategories.DICTIONARY_CODE_LABEL:
-      toastMessage('Code Actions:\n' + getWordsByCategory(wordDictionary, dictionaryCategories.DICTIONARY_CODE_LABEL).join(', '));
+      toastMessage('Code Actions:\n' + Object.keys(getWordsByCategory(wordDictionary, dictionaryCategories.DICTIONARY_CODE_LABEL)).join(', '));
       break;
     case dictionaryCategories.DICTIONARY_STOP_LABEL:
       predictWordStop();
