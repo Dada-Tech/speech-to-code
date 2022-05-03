@@ -16,6 +16,9 @@ const START_INSTRUCTIONS = 'Press "Start" to being listening';
 
 // Dictionary
 const DICTIONARY_ACTION_LABEL = 'actions'
+const DICTIONARY_TEXT_LABEL = 'text'
+const DICTIONARY_CATEGORIES_LABEL = 'categories'
+const DICTIONARY_CODE_LABEL = 'code'
 
 // - Error Messages -
 const NO_FILE_MESSAGE_LABEL = 'Must select exactly one file! Click here to upload file.'
@@ -27,7 +30,6 @@ const NO_MODEL_ERROR_MESSAGE = 'There is no model!';
 export const speechCodeConfig = {
   recognitionConfig,
   LOGGING,
-  DICTIONARY_ACTION_LABEL,
   LINE_BREAK_FORMATTED,
   START_INSTRUCTIONS,
   NO_FILE_MESSAGE_LABEL,
@@ -35,4 +37,11 @@ export const speechCodeConfig = {
   FAILED_BINARY_FILE_READ_ERROR_MESSAGE,
   FAILED_FILE_READ_ERROR_MESSAGE,
   NO_MODEL_ERROR_MESSAGE
+}
+
+export const dictionaryCategories = {
+  DICTIONARY_ACTION_LABEL,
+  DICTIONARY_CODE_LABEL,
+  DICTIONARY_CATEGORIES_LABEL,
+  DICTIONARY_TEXT_LABEL,
 }

@@ -1,5 +1,5 @@
 import { fileNameListen, setTable } from "./util.js";
-import { speechCodeConfig } from "./config.js";
+import { dictionaryCategories, speechCodeConfig } from "./config.js";
 
 export const defaultWordDictionary = require('../dictionaries/default-dictionary.json');
 export const systemFunctionDictionary = require('../dictionaries/system-function-dictionary.json');
@@ -27,22 +27,20 @@ export const setFunctionDictionary = (dictionary) => {
 }
 
 /**
- * Extract functions from keyword dictionaries
- * @param dictionary word dictionaries
- * @returns object of categories
- */
-export const dictionaryCategories = (dictionary) => {
-  return {};
-};
-
-/**
  * Extract dictionaries words of a category
  * @param dictionary word dictionaries
  * @param category dictionaries category
  * @returns object of categories
  */
-export const getDictionaryCategory = (dictionary, category) => {
-  return {};
+export const getWordsByCategory = (dictionary, category) => {
+  const activeWordDictionary = {}
+
+  Object.entries(dictionary).forEach(([key, value]) => {
+    if (value.category === category) {
+      activeWordDictionary[key] = value
+    }
+  })
+  return activeWordDictionary;
 };
 
 /**
@@ -73,7 +71,7 @@ export const extractDictionaryWords = (dictionary) => {
 
   Object.entries(dictionary).forEach(([key, value]) => {
     // if it isn't category
-    if (value.category !== speechCodeConfig.DICTIONARY_ACTION_LABEL) {
+    if (value.category !== dictionaryCategories.DICTIONARY_ACTION_LABEL) {
       // it's a non-function word
       activeWordDictionary[key] = value
     }
@@ -94,7 +92,8 @@ export const onDictChange = (callbackFn) => {
       try {
         // set new word dictionaries
         const newWordDictionary = JSON.parse('' + event.target.result);
-        setWordDictionary(newWordDictionary);
+        setWordDictionary(extractDictionaryWords(newWordDictionary));
+        setFunctionDictionary(extractDictionaryFunctions(newWordDictionary));
         callbackFn(newWordDictionary);
       } catch (err) {
         console.log(err);
