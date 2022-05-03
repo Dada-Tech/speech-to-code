@@ -6,7 +6,7 @@ import {
   extractDictionaryFunctions,
   onDictChange,
   systemFunctionDictionary,
-  extractDictionaryWords, getWordsByCategory
+  extractDictionaryWords, getWordsByCategory, getCategories
 } from "./dictionary.js";
 import { updateCodeMirror } from "./code-console.js";
 
@@ -81,6 +81,14 @@ const predictWordStop = (seconds = 0) => {
   setStartButtonEnabled(true);
 };
 
+const predictWordPause = () => {
+  listeningPaused = true
+}
+
+const predictWordResume = () => {
+  listeningPaused = false
+}
+
 //  result.scores contains the probability scores that correspond to recognizer.wordLabels().
 //  result.spectrogram contains the spectrogram of the recognized word.
 const onWordRecognize = (result) => {
@@ -94,41 +102,49 @@ const onWordRecognize = (result) => {
   setInstructions('Predicted word: ' + word);
   toastMessage(word);
 
-  // if the word is in known functions keywords
-  if (functionDictionary[word]) {
-    switch (word) {
-      case dictionaryCategories.DICTIONARY_ACTION_LABEL:
-        console.log(getWordsByCategory(dictionaryCategories.DICTIONARY_ACTION_LABEL));
-        break;
-      case dictionaryCategories.DICTIONARY_CATEGORIES_LABEL:
-        console.log(Object.values(dictionaryCategories));
-        break;
-      case dictionaryCategories.DICTIONARY_TEXT_LABEL:
-        console.log(getWordsByCategory(dictionaryCategories.DICTIONARY_TEXT_LABEL));
-        break;
-      case dictionaryCategories.DICTIONARY_CODE_LABEL:
-        console.log(getWordsByCategory(dictionaryCategories.DICTIONARY_CODE_LABEL));
-        break;
-      case dictionaryCategories.DICTIONARY_WAKE_WORD_LABEL:
-        listeningPaused = false;
-        break;
-      case dictionaryCategories.DICTIONARY_PAUSE_LABEL:
-        listeningPaused = true;
-        break;
-      case dictionaryCategories.DICTIONARY_STOP_LABEL:
-        predictWordStop();
-        break;
-    }
+  // pause and unpause
+  if (listeningPaused && word === dictionaryCategories.DICTIONARY_WAKE_WORD_LABEL) {
+      predictWordResume();
+    return;
+  } else if(word === dictionaryCategories.DICTIONARY_PAUSE_LABEL) {
+    predictWordPause();
     return;
   }
 
-  // if the word is in known keyword
-  if (wordDictionary[word]) {
-    updateCodeMirror(wordDictionary[word].code);
-    console.log('word: "' + word + '"');
-    console.log(wordDictionary[word].code);
+  // if the word is in a known function keyword
+  if (functionDictionary[word]) {
+    functionKeywordRecognition(word);
+  } else if (wordDictionary[word]) {
+    // if the word is in a known word
+    wordDictionaryRecognition(word);
   }
 };
+
+const wordDictionaryRecognition = (word) => {
+  updateCodeMirror(wordDictionary[word].code);
+  console.log('word: "' + word + '"');
+  console.log(wordDictionary[word].code);
+}
+
+const functionKeywordRecognition = (word) => {
+  switch (word) {
+    case dictionaryCategories.DICTIONARY_ACTION_LABEL:
+      console.log(functionDictionary);
+      break;
+    case dictionaryCategories.DICTIONARY_CATEGORIES_LABEL:
+      console.log([...getCategories(wordDictionary), ...getCategories(functionDictionary)]);
+      break;
+    case dictionaryCategories.DICTIONARY_TEXT_LABEL:
+      console.log(getWordsByCategory(wordDictionary, dictionaryCategories.DICTIONARY_TEXT_LABEL));
+      break;
+    case dictionaryCategories.DICTIONARY_CODE_LABEL:
+      console.log(getWordsByCategory(wordDictionary, dictionaryCategories.DICTIONARY_CODE_LABEL));
+      break;
+    case dictionaryCategories.DICTIONARY_STOP_LABEL:
+      predictWordStop();
+      break;
+  }
+}
 
 // predict words on click
 startButton.addEventListener('click', async () => {
@@ -326,7 +342,7 @@ evalModelOnDatasetButton.addEventListener('click', async () => {
   setStartButtonEnabled(true);
 });
 
-// change dataset filename label on input
+// change dataset filename label on input && auto upload file
 fileNameListen(datasetFileInput, datasetFileInputLabel, () => {
   uploadFilesButton.click()
   loadTransferModelButton.click()

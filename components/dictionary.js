@@ -43,6 +43,12 @@ export const getWordsByCategory = (dictionary, category) => {
   return activeWordDictionary;
 };
 
+export const getCategories = (dictionary) => {
+  const categories = [...new Set(Object.values(dictionary).map(value => value.category))]
+  return categories.filter(Boolean);
+}
+
+
 /**
  * Extract functions from keyword dictionaries
  * @param dictionary word dictionaries
