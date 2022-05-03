@@ -103,7 +103,6 @@ const onWordRecognize = (result) => {
   const word = scores[0].word;
 
   setInstructions('Predicted word: ' + word);
-  toastMessage(word);
 
   // pause and unpause
   if (listeningPaused && word === dictionaryCategories.DICTIONARY_WAKE_WORD_LABEL) {
@@ -125,6 +124,7 @@ const onWordRecognize = (result) => {
 
 const wordDictionaryRecognition = (word) => {
   updateCodeMirror(wordDictionary[word].code);
+  toastMessage('Keyword Recognized: ', word);
   console.log('word: "' + word + '"');
   console.log(wordDictionary[word].code);
 }
