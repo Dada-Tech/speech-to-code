@@ -77,16 +77,19 @@ const predictWordStop = (seconds = 0) => {
   setTimeout(() => {
     recognizer.stopListening();
     console.log('listening ended');
+    toastMessage('Stopped: Listening Ended');
   }, seconds * 1000);
   setStartButtonEnabled(true);
 };
 
 const predictWordPause = () => {
-  listeningPaused = true
+  listeningPaused = true;
+  toastMessage("Paused; Resume with wake word");
 }
 
 const predictWordResume = () => {
-  listeningPaused = false
+  listeningPaused = false;
+  toastMessage("Unpaused: Now Listening for keywords");
 }
 
 //  result.scores contains the probability scores that correspond to recognizer.wordLabels().
@@ -129,16 +132,16 @@ const wordDictionaryRecognition = (word) => {
 const functionKeywordRecognition = (word) => {
   switch (word) {
     case dictionaryCategories.DICTIONARY_ACTION_LABEL:
-      console.log(functionDictionary);
+      toastMessage('Available Actions:\n' + Object.keys(functionDictionary).join(', '));
       break;
     case dictionaryCategories.DICTIONARY_CATEGORIES_LABEL:
-      console.log([...getCategories(wordDictionary), ...getCategories(functionDictionary)]);
+      toastMessage('Labels:\n' + [...getCategories(wordDictionary), ...getCategories(functionDictionary)].join(', '));
       break;
     case dictionaryCategories.DICTIONARY_TEXT_LABEL:
-      console.log(getWordsByCategory(wordDictionary, dictionaryCategories.DICTIONARY_TEXT_LABEL));
+      toastMessage('Text Actions:\n' + Object.keys(getWordsByCategory(wordDictionary, dictionaryCategories.DICTIONARY_TEXT_LABEL)).join(', '));
       break;
     case dictionaryCategories.DICTIONARY_CODE_LABEL:
-      console.log(getWordsByCategory(wordDictionary, dictionaryCategories.DICTIONARY_CODE_LABEL));
+      toastMessage('Code Actions:\n' + getWordsByCategory(wordDictionary, dictionaryCategories.DICTIONARY_CODE_LABEL).join(', '));
       break;
     case dictionaryCategories.DICTIONARY_STOP_LABEL:
       predictWordStop();
