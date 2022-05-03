@@ -17,7 +17,10 @@ const START_INSTRUCTIONS = 'Press "Start" to being listening';
 // Dictionary
 const DICTIONARY_ACTION_LABEL = 'actions'
 const DICTIONARY_TEXT_LABEL = 'text'
+const DICTIONARY_WAKE_WORD_LABEL = 'javascript'
+const DICTIONARY_PAUSE_LABEL = 'pause'
 const DICTIONARY_CATEGORIES_LABEL = 'categories'
+const DICTIONARY_STOP_LABEL = 'stop'
 const DICTIONARY_CODE_LABEL = 'code'
 
 // - Error Messages -
@@ -44,4 +47,7 @@ export const dictionaryCategories = {
   DICTIONARY_CODE_LABEL,
   DICTIONARY_CATEGORIES_LABEL,
   DICTIONARY_TEXT_LABEL,
+  DICTIONARY_WAKE_WORD_LABEL,
+  DICTIONARY_PAUSE_LABEL,
+  DICTIONARY_STOP_LABEL
 }

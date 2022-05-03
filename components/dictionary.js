@@ -70,9 +70,8 @@ export const extractDictionaryWords = (dictionary) => {
   const activeWordDictionary = {}
 
   Object.entries(dictionary).forEach(([key, value]) => {
-    // if it isn't category
+    // if it isn't of category "actions"
     if (value.category !== dictionaryCategories.DICTIONARY_ACTION_LABEL) {
-      // it's a non-function word
       activeWordDictionary[key] = value
     }
   })

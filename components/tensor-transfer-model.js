@@ -1,12 +1,12 @@
 import { BACKGROUND_NOISE_TAG } from "@tensorflow-models/speech-commands";
-import { speechCodeConfig } from "./config.js";
+import { dictionaryCategories, speechCodeConfig } from "./config.js";
 import { fileNameListen, getDateString, setInstructions, toastMessage } from "./util.js";
 import {
   defaultWordDictionary,
   extractDictionaryFunctions,
   onDictChange,
   systemFunctionDictionary,
-  extractDictionaryWords
+  extractDictionaryWords, getWordsByCategory
 } from "./dictionary.js";
 import { updateCodeMirror } from "./code-console.js";
 
@@ -34,6 +34,7 @@ let recognizer;
 let transferDurationMultiplier = 2;
 let wordDictionary = defaultWordDictionary;
 let functionDictionary = systemFunctionDictionary;
+let listeningPaused = false;
 
 // INIT
 export async function initTensorNLP() {
@@ -88,18 +89,44 @@ const onWordRecognize = (result) => {
   scores = Array.from(scores).map((s, i) => ({ score: s, word: transferWords[i] }));
   // Find the most probable word.
   scores.sort((s1, s2) => s2.score - s1.score);
-  const predictedWord = scores[0].word;
+  const word = scores[0].word;
 
-  setInstructions('Predicted word: ' + predictedWord);
-  console.log(predictedWord);
-  toastMessage(predictedWord);
+  setInstructions('Predicted word: ' + word);
+  toastMessage(word);
 
-  // stop when keyword stop is heard
-  if (predictedWord === functionDictionary.stop) {
-    predictWordStop();
-  } else if (wordDictionary[predictedWord]) {
-    updateCodeMirror(wordDictionary[predictedWord].code);
-    console.log('pasting mapped value of ' + predictedWord, wordDictionary[predictedWord].code);
+  // if the word is in known functions keywords
+  if (functionDictionary[word]) {
+    switch (word) {
+      case dictionaryCategories.DICTIONARY_ACTION_LABEL:
+        console.log(getWordsByCategory(dictionaryCategories.DICTIONARY_ACTION_LABEL));
+        break;
+      case dictionaryCategories.DICTIONARY_CATEGORIES_LABEL:
+        console.log(Object.values(dictionaryCategories));
+        break;
+      case dictionaryCategories.DICTIONARY_TEXT_LABEL:
+        console.log(getWordsByCategory(dictionaryCategories.DICTIONARY_TEXT_LABEL));
+        break;
+      case dictionaryCategories.DICTIONARY_CODE_LABEL:
+        console.log(getWordsByCategory(dictionaryCategories.DICTIONARY_CODE_LABEL));
+        break;
+      case dictionaryCategories.DICTIONARY_WAKE_WORD_LABEL:
+        listeningPaused = false;
+        break;
+      case dictionaryCategories.DICTIONARY_PAUSE_LABEL:
+        listeningPaused = true;
+        break;
+      case dictionaryCategories.DICTIONARY_STOP_LABEL:
+        predictWordStop();
+        break;
+    }
+    return;
+  }
+
+  // if the word is in known keyword
+  if (wordDictionary[word]) {
+    updateCodeMirror(wordDictionary[word].code);
+    console.log('word: "' + word + '"');
+    console.log(wordDictionary[word].code);
   }
 };
 
@@ -127,7 +154,7 @@ const transferLearningModelTrain = async () => {
     epochs: 25,
     callback: {
       onEpochEnd: async (epoch, logs) => {
-        console.log(`Epoch ${epoch}: loss=${logs.loss}, accuracy=${logs.acc}`);
+        console.log(`Epoch ${ epoch }: loss=${ logs.loss }, accuracy=${ logs.acc }`);
       },
     },
   });
@@ -138,13 +165,19 @@ const transferLearningModelTrain = async () => {
 
 // *** bookmark-4 *** download file button
 downloadAsFileButton.addEventListener('click', () => {
+  const files = datasetFileInput.files;
+  if (files === null || files.length !== 1) {
+    datasetFileInputLabel.innerHTML = speechCodeConfig.NO_FILE_MESSAGE_LABEL;
+    throw new Error(speechCodeConfig.NO_FILE_ERROR_MESSAGE);
+  }
+
   const basename = getDateString();
   const artifacts = transferRecognizer.serializeExamples();
 
   // Trigger downloading of the data .bin file.
   const anchor = document.createElement('a');
-  const blob = new Blob([artifacts], { type: 'application/octet-stream' });
-  anchor.download = `${basename}.bin`;
+  const blob = new Blob([ artifacts ], { type: 'application/octet-stream' });
+  anchor.download = `${ basename }.bin`;
   anchor.href = window.URL.createObjectURL(blob);
   anchor.title = basename;
   document.body.appendChild(anchor);
@@ -232,7 +265,7 @@ async function loadDatasetInTransferRecognizer(serialized) {
   setStartButtonEnabled(true);
   console.log(
     `Determined transferDurationMultiplier from uploaded ` +
-    `dataset: ${transferDurationMultiplier}`);
+    `dataset: ${ transferDurationMultiplier }`);
   console.log(transferRecognizer);
   console.log(speechCodeConfig.LINE_BREAK_FORMATTED);
 }
@@ -258,6 +291,7 @@ async function populateSavedTransferModelsSelect() {
 evalModelOnDatasetButton.addEventListener('click', async () => {
   const files = datasetFileInput.files;
   if (files === null || files.length !== 1) {
+    datasetFileInputLabel.innerHTML = speechCodeConfig.NO_FILE_MESSAGE_LABEL;
     throw new Error(speechCodeConfig.NO_FILE_ERROR_MESSAGE);
   }
   const datasetFileReader = new FileReader();
@@ -293,4 +327,7 @@ evalModelOnDatasetButton.addEventListener('click', async () => {
 });
 
 // change dataset filename label on input
-fileNameListen(datasetFileInput, datasetFileInputLabel, () => loadTransferModelButton.click())
+fileNameListen(datasetFileInput, datasetFileInputLabel, () => {
+  uploadFilesButton.click()
+  loadTransferModelButton.click()
+})
