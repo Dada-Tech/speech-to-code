@@ -9,6 +9,7 @@ import {
   extractDictionaryWords, getWordsByCategory, getCategories
 } from "./dictionary.js";
 import { updateCodeMirror } from "./code-console.js";
+import { logMessage } from "./util";
 
 // noinspection JSUnusedLocalSymbols
 const tf = require('@tensorflow/tfjs');
@@ -76,7 +77,7 @@ const predictWordStart = () => {
 const predictWordStop = (seconds = 0) => {
   setTimeout(() => {
     recognizer.stopListening();
-    console.log('listening ended');
+    logMessage('listening ended');
     toastMessage('Stopped: Listening Ended');
   }, seconds * 1000);
   setStartButtonEnabled(true);
@@ -125,8 +126,8 @@ const onWordRecognize = (result) => {
 const wordDictionaryRecognition = (word) => {
   updateCodeMirror(wordDictionary[word].code);
   toastMessage('Keyword Recognized: ', word);
-  console.log('word: "' + word + '"');
-  console.log(wordDictionary[word].code);
+  logMessage('word: "' + word + '"');
+  logMessage(wordDictionary[word].code);
 }
 
 const functionKeywordRecognition = (word) => {
@@ -163,7 +164,7 @@ const setStartButtonEnabled = (enabled) => {
 }
 
 const transferLearningModelTrain = async () => {
-  console.log(transferRecognizer.countExamples());
+  logMessage(transferRecognizer.countExamples());
 
   // Start training of the transfer-learning model.
   // You can specify `epochs` (number of training epochs) and `callback`
@@ -173,7 +174,7 @@ const transferLearningModelTrain = async () => {
     epochs: 25,
     callback: {
       onEpochEnd: async (epoch, logs) => {
-        console.log(`Epoch ${ epoch }: loss=${ logs.loss }, accuracy=${ logs.acc }`);
+        logMessage(`Epoch ${ epoch }: loss=${ logs.loss }, accuracy=${ logs.acc }`);
       },
     },
   });
@@ -215,7 +216,7 @@ uploadFilesButton.addEventListener('click', async () => {
     try {
       await loadDatasetInTransferRecognizer(event.target.result);
     } catch (err) {
-      console.log(err);
+      logMessage(err);
       const originalTextContent = uploadFilesButton.textContent;
       uploadFilesButton.textContent = err.message;
       setTimeout(() => {
@@ -247,7 +248,7 @@ loadTransferModelButton.addEventListener('click', async () => {
 async function loadDatasetInTransferRecognizer(serialized) {
   let modelName = transferModelNameInput.value;
   if (modelName == null || modelName.length === 0) {
-    console.log('setting default model name as none was given');
+    logMessage('setting default model name as none was given');
     transferModelNameInput.value = getDateString();
     modelName = transferModelNameInput.value;
   }
@@ -279,14 +280,14 @@ async function loadDatasetInTransferRecognizer(serialized) {
   // Determine the transferDurationMultiplier value from the dataset.
   transferDurationMultiplier =
     durationMultipliers.length > 0 ? Math.max(...durationMultipliers) : 1;
-  console.log(speechCodeConfig.LINE_BREAK_FORMATTED);
+  logMessage(speechCodeConfig.LINE_BREAK_FORMATTED);
   setInstructions('DataSet Loaded!\n' + speechCodeConfig.START_INSTRUCTIONS);
   setStartButtonEnabled(true);
-  console.log(
+  logMessage(
     `Determined transferDurationMultiplier from uploaded ` +
     `dataset: ${ transferDurationMultiplier }`);
-  console.log(transferRecognizer);
-  console.log(speechCodeConfig.LINE_BREAK_FORMATTED);
+  logMessage(transferRecognizer);
+  logMessage(speechCodeConfig.LINE_BREAK_FORMATTED);
 }
 
 // *** bookmark-2 *** Populate Model fn
@@ -330,7 +331,7 @@ evalModelOnDatasetButton.addEventListener('click', async () => {
           0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0,
         ],
       });
-      console.log(evalResult);
+      logMessage(evalResult);
     } catch (err) {
       const originalTextContent = evalModelOnDatasetButton.textContent;
       evalModelOnDatasetButton.textContent = err.message;

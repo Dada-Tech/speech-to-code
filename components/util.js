@@ -11,7 +11,7 @@ export const setInstructions = (text) => {
   instructions.text(text)
 }
 
-export const log = (message) => {
+export const logMessage = (message) => {
   if (speechCodeConfig.LOGGING) {
     console.log(message);
   }
