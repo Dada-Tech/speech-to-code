@@ -1,23 +1,28 @@
 {
   "function": {
     "code": "const fn = () => {\n  \n};",
-    "description": "Paste a javascript function block"
+    "description": "Paste a javascript function block",
+    "category": "code"
   },
   "ifelse": {
     "code": "if () {\n  \n} else {\n  \n}",
-    "description": "Paste an empty if-else block"
+    "description": "Paste an empty if-else block",
+    "category": "code"
   },
   "trycatch": {
     "code": "try {\n  \n} catch (e) {\n  console.log('An Error Occurred', e);\n} finally {\n  \n}",
-    "description": "Paste a formatted try-catch block with error handling"
+    "description": "Paste a formatted try-catch block with error handling",
+    "category": "code"
   },
   "object loop": {
     "code": "for (const [key, value] of Object.entries(anotherPerson)) {\n  console.log(`${key}: ${value}`);\n}",
-    "description": "Loop through the keys and values of an Objects"
+    "description": "Loop through the keys and values of an Objects",
+    "category": "code"
   },
   "capitalize": {
-    "code": "str.replace(/\\b[a-z]/g, char => char.toUpperCase());",
-    "description": "Capitalize a string"
+    "code": ".replace(/\\b[a-z]/g, char => char.toUpperCase());",
+    "description": "Capitalize a string",
+    "category": "text"
   },
   "stop": {
     "description": "Stop listening for keywords",

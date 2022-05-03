@@ -4,6 +4,10 @@
     "description": "Paste a javascript function block",
     "category": "code"
   },
+  "stop": {
+    "description": "Stop listening for keywords",
+    "category": "actions"
+  },
   "fire": {
     "code": "\uD83D\uDD25 \uD83D\uDD25 \uD83D\uDD25",
     "description": "Paste fire emojis",

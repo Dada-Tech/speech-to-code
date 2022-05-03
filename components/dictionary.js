@@ -108,7 +108,7 @@ export const onDictChange = (callbackFn) => {
 setFunctionDictionary(systemFunctionDictionary);
 
 // set table of the default dictionaries
-setWordDictionary(defaultWordDictionary);
+setWordDictionary(extractDictionaryWords(defaultWordDictionary));
 
 // change dictionaries filename label on input
 fileNameListen(dictionaryFileInput, dictionaryFileInputLabel, () => dictionaryUploadButton.click())
