@@ -4,7 +4,7 @@
 //    - probabilityThreshold
 //    - includeEmbedding
 const recognitionConfig = {
-  probabilityThreshold: 0.95,
+  probabilityThreshold: 0.80,
 };
 
 //  - Logging -
