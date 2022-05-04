@@ -1,7 +1,7 @@
 import { fileNameListen, setTable } from "./util.js";
 import { dictionaryCategories, speechCodeConfig } from "./config.js";
 
-export const defaultWordDictionary = require('../dictionaries/default-dictionary.json');
+export const defaultWordDictionary = require('../dictionaries/system-default-dictionary.json');
 export const systemFunctionDictionary = require('../dictionaries/system-function-dictionary.json');
 
 const functionDictionaryElement = document.getElementById('function-dictionary');
