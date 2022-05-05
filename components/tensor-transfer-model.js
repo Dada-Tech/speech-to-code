@@ -106,16 +106,20 @@ const onWordRecognize = (result) => {
   scores.sort((s1, s2) => s2.score - s1.score);
   const word = scores[0].word;
 
-  setInstructions('Predicted word: ' + word);
-
   // pause and unpause
-  if (listeningPaused && word === dictionaryCategories.DICTIONARY_WAKE_WORD_LABEL) {
+  if (listeningPaused) {
+    if(word === dictionaryCategories.DICTIONARY_WAKE_WORD_LABEL) {
       predictWordResume();
+    }
+
+    setInstructions('Predicted word (pause mode): ' + word);
     return;
-  } else if(word === dictionaryCategories.DICTIONARY_PAUSE_LABEL) {
+  } if(word === dictionaryCategories.DICTIONARY_PAUSE_LABEL) {
     predictWordPause();
     return;
   }
+
+  setInstructions('Predicted word: ' + word);
 
   // if the word is in a known function keyword
   if (functionDictionary[word]) {
@@ -124,7 +128,7 @@ const onWordRecognize = (result) => {
     // if the word is in a known word
     wordDictionaryRecognition(word);
   }
-};
+}
 
 const wordDictionaryRecognition = (word) => {
   updateCodeMirror(wordDictionary[word].code);
