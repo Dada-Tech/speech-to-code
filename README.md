@@ -31,7 +31,7 @@ You may upload your own pre-defined set of speech commands via this syntax
 ## Code Console
 This project integrates a Javascript IDE in the browser to allow for simple Javascript programming.  
 
-# Demos
+# Examples
 
 ### Word prediction
 ![speech-to-code-predicting-word.png](resources/speech-to-code-predicting-word.png)
@@ -44,5 +44,5 @@ This project integrates a Javascript IDE in the browser to allow for simple Java
 ## Videos
 [speech-to-code-programming.mp4](resources/speech-to-code-programming.mp4)
 
-[speech-to-code-categories-actions.mp4.mp4](resources/speech-to-code-categories-actions.mp4)
+[speech-to-code-categories-actions.mp4](resources/speech-to-code-categories-actions.mp4)
 
